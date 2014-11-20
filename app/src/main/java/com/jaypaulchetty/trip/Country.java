@@ -26,4 +26,8 @@ public class Country {
             }
         }
     }
+
+    public String toString(){
+        return mName;
+    }
 }
