@@ -15,7 +15,7 @@ public class TripCreator {
     public Trip createTrip(){
         Trip trip = new Trip();
         // test route
-        ArrayList<Country> route = new ArrayList<Country>(mCountries.subList(0,3));
+        ArrayList<Country> route = new ArrayList<Country>(mCountries.subList(10,14));
         trip.addRoute(route);
         return trip;
     }

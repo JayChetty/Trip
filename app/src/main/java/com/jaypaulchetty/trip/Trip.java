@@ -19,4 +19,7 @@ public class Trip {
     public ArrayList<Country> getRoute(int pos){
         return mRoutes.get(pos);
     }
+    public int numRoutes(){
+        return mRoutes.size();
+    }
 }
