@@ -22,22 +22,14 @@ import java.util.List;
 
 
 public class TripFragment extends ListFragment {
-    private ArrayList<Country> mCountries;
     private Trip mTrip;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.d("TripFragement", "Starting the Fragment YO");
-        CountryJSONLoader loader = new CountryJSONLoader(getActivity());
-        try {
-            mCountries = loader.loadCountries();
-        } catch (Exception e){
-            Log.e("TRip", "error loading crimes", e);
-            mCountries = new ArrayList<Country>();
-        }
-        mTrip = new TripCreator(mCountries).createTrip();
+
+        mTrip = TripCreator.get(getActivity()).createTrip();
 
         TripArrayAdapter adapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(adapter);
