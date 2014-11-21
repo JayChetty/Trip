@@ -23,6 +23,7 @@ import java.util.List;
 
 public class TripFragment extends ListFragment {
     private Trip mTrip;
+    private TripArrayAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -30,11 +31,18 @@ public class TripFragment extends ListFragment {
         setHasOptionsMenu(true);
 
         mTrip = TripCreator.get(getActivity()).createTrip();
-
-        TripArrayAdapter adapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
-        setListAdapter(adapter);
+        mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
+        setListAdapter(mAdapter);
 
     }
+
+    private void createNewTrip(){
+        mTrip = TripCreator.get(getActivity()).createTrip();
+        mAdapter.clear();
+        mAdapter.addAll(mTrip.getRoute(0));
+        mAdapter.notifyDataSetChanged();
+    }
+
     private Boolean answerPasses(ArrayList<String> answers){
         Boolean passed = false;
         for(int i=0;i<mTrip.numRoutes(); i++){//loop through routes
@@ -59,8 +67,7 @@ public class TripFragment extends ListFragment {
         switch(item.getItemId()){
             case R.id.menu_item_check_route:
                 Log.d("TripFragment","item clicked");
-                TripArrayAdapter adapter = (TripArrayAdapter)getListView().getAdapter();
-                ArrayList<EditText> answerViews = adapter.getAnswerViews();
+                ArrayList<EditText> answerViews = mAdapter.getAnswerViews();
                 int length = answerViews.size();
                 ArrayList<String> answers = new ArrayList<String>();
                 //put together string of arrays
@@ -72,6 +79,7 @@ public class TripFragment extends ListFragment {
                     Log.d("TripFragment","CORRECT");
                     Toast toast = Toast.makeText(this.getActivity(), "You did it!", Toast.LENGTH_LONG);
                     toast.show();
+                    createNewTrip();
                 }else{
                     Log.d("TripFragment","FALSE");
                     Toast toast = Toast.makeText(this.getActivity(), "Sorry not correct!", Toast.LENGTH_LONG);
@@ -97,9 +105,19 @@ public class TripFragment extends ListFragment {
             return answerViews;
         }
 
+        public void clearAnswerViews(){
+            answerViews.clear();
+        };
+
         public TripArrayAdapter(Context context, int resource, List<Country> objects) {
             super(context, resource, objects);
             answerViews = new ArrayList<EditText>();
+        }
+
+        @Override
+        public void clear() {
+            super.clear();
+            answerViews.clear();
         }
 
 

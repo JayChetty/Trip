@@ -4,13 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by jay on 19/11/14.
  */
 public class TripCreator {
-    private ArrayList<Country> mCountries;
     private static TripCreator sTripCreator;
+    private ArrayList<Country> mCountries;
     private Context mContext;
 
     public static TripCreator get(Context context){
@@ -40,7 +41,9 @@ public class TripCreator {
     public Trip createTrip(){
         Trip trip = new Trip();
         // test route
-        ArrayList<Country> route = new ArrayList<Country>(mCountries.subList(10,14));
+        Random random = new Random();
+        int start = random.nextInt(mCountries.size()-6) + 1;
+        ArrayList<Country> route = new ArrayList<Country>(mCountries.subList(start,start+4));
         trip.addRoute(route);
         return trip;
     }
