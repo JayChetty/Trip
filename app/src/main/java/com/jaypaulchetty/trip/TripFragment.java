@@ -35,9 +35,6 @@ public class TripFragment extends ListFragment {
         mTrip = tripCreator.createTrip();
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
-
-
-
     }
 
     private void createNewTrip(){

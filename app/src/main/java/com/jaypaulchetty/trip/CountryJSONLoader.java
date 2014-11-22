@@ -35,7 +35,6 @@ public class CountryJSONLoader {
             }
             //Parse the JSON using JSONTokener
             JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
-            Log.d("JSON", "return countries son" + array.toString());
             //Build the array of from JSONObjects
             for(int i = 0; i < array.length(); i++){
                 countries.add(new Country(array.getJSONObject(i)));
@@ -48,8 +47,6 @@ public class CountryJSONLoader {
             if (reader != null)
                 reader.close();
         }
-
-        Log.d("JSON", "return countries" + countries.toString());
         return countries;
     }
 }
