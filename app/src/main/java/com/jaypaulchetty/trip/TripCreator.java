@@ -21,6 +21,15 @@ public class TripCreator {
         return sTripCreator;
     }
 
+    public ArrayList<String> getCountryNames(){
+        ArrayList<String> countryNames = new ArrayList<String>();
+        int length = mCountries.size();
+        for(int i=0;i<length;i++){
+            countryNames.add(mCountries.get(i).getName());
+        }
+        return countryNames;
+    }
+
     private TripCreator(Context context){
         mContext = context;
         mCountries = getCountries();//This should be done on a background thread

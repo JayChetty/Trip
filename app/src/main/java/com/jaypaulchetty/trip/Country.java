@@ -27,6 +27,8 @@ public class Country {
         }
     }
 
+    public String getName() { return mName; }
+
     public String toString(){
         return mName;
     }

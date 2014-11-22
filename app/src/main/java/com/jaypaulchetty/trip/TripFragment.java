@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,9 +31,12 @@ public class TripFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        mTrip = TripCreator.get(getActivity()).createTrip();
+        TripCreator tripCreator =  TripCreator.get(getActivity());
+        mTrip = tripCreator.createTrip();
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
+
+
 
     }
 
@@ -67,7 +71,7 @@ public class TripFragment extends ListFragment {
         switch(item.getItemId()){
             case R.id.menu_item_check_route:
                 Log.d("TripFragment","item clicked");
-                ArrayList<EditText> answerViews = mAdapter.getAnswerViews();
+                ArrayList<AutoCompleteTextView> answerViews = mAdapter.getAnswerViews();
                 int length = answerViews.size();
                 ArrayList<String> answers = new ArrayList<String>();
                 //put together string of arrays
@@ -82,7 +86,7 @@ public class TripFragment extends ListFragment {
                     createNewTrip();
                 }else{
                     Log.d("TripFragment","FALSE");
-                    Toast toast = Toast.makeText(this.getActivity(), "Sorry not correct!", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);
                     toast.show();
                 }
                 return true;
@@ -99,25 +103,29 @@ public class TripFragment extends ListFragment {
 
 
     public class TripArrayAdapter extends ArrayAdapter<Country>{
-        private ArrayList<EditText> answerViews;
+        private ArrayList<AutoCompleteTextView> mAnswerViews;
+        private ArrayAdapter<String> mCountryAdapter;
 
-        public ArrayList<EditText> getAnswerViews() {
-            return answerViews;
+
+        public ArrayList<AutoCompleteTextView> getAnswerViews() {
+            return mAnswerViews;
         }
 
         public void clearAnswerViews(){
-            answerViews.clear();
+            mAnswerViews.clear();
         };
 
         public TripArrayAdapter(Context context, int resource, List<Country> objects) {
             super(context, resource, objects);
-            answerViews = new ArrayList<EditText>();
+            mAnswerViews = new ArrayList<AutoCompleteTextView>();
+            TripCreator tripCreator =  TripCreator.get(getActivity());
+            mCountryAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, tripCreator.getCountryNames());
         }
 
         @Override
         public void clear() {
             super.clear();
-            answerViews.clear();
+            mAnswerViews.clear();
         }
 
 
@@ -129,8 +137,9 @@ public class TripFragment extends ListFragment {
                 out = super.getView(position, convertView, parent);
             }
             else {
-                EditText view = new EditText(getContext());
-                answerViews.add(view);
+                AutoCompleteTextView view = new AutoCompleteTextView(getContext());
+                view.setAdapter(mCountryAdapter);
+                mAnswerViews.add(view);
                 out = view;
                 view = null;
             }
