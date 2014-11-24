@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,14 +19,17 @@ import java.util.List;
 
 
 public class TripFragment extends ListFragment {
+    public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.trip.region";
     private Trip mTrip;
     private TripArrayAdapter mAdapter;
+    private static final String TAG ="ListFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        String region = getActivity().getIntent().getStringExtra(REGION_FOR_TRIPS);
+        Log.d(TAG, "fragment starting with region " + region);
         TripCreator tripCreator =  TripCreator.get(getActivity());
         mTrip = tripCreator.createTrip();
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
@@ -66,8 +65,17 @@ public class TripFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
+            case R.id.menu_item_show_answer:
+                String answer= "";
+                for(int i=0;i<mTrip.numRoutes(); i++) {
+                    answer = answer.concat("Route " + (i+1) + mTrip.getRoute(i).toString() +"\n");
+                    Log.d(TAG,"concating string" + mTrip.getRoute(i).toString());
+                }
+                Toast answerToast = Toast.makeText(this.getActivity(), answer, Toast.LENGTH_LONG);
+                answerToast.show();
+                return true;
             case R.id.menu_item_check_route:
-                Log.d("TripFragment","item clicked");
+                Log.d(TAG,"item clicked");
                 ArrayList<AutoCompleteTextView> answerViews = mAdapter.getAnswerViews();
                 int length = answerViews.size();
                 ArrayList<String> answers = new ArrayList<String>();
@@ -77,12 +85,12 @@ public class TripFragment extends ListFragment {
                     answers.add(answerString);
                 }
                 if(answerPasses(answers)){
-                    Log.d("TripFragment","CORRECT");
+                    Log.d(TAG,"CORRECT");
                     Toast toast = Toast.makeText(this.getActivity(), "You did it!", Toast.LENGTH_LONG);
                     toast.show();
                     createNewTrip();
                 }else{
-                    Log.d("TripFragment","FALSE");
+                    Log.d(TAG,"FALSE");
                     Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);
                     toast.show();
                 }

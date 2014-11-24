@@ -16,6 +16,7 @@ public class TripCreator {
     private Context mContext;
     private static final String TAG="TripCreator";
 
+
     public static TripCreator get(Context context){
         if(sTripCreator == null){
             sTripCreator = new TripCreator(context);
@@ -34,10 +35,10 @@ public class TripCreator {
 
     private TripCreator(Context context){
         mContext = context;
-        mCountries = getCountries();//This should be done on a background thread
+        mCountries = loadData();//This should be possibly done on a background thread
     }
 
-    private ArrayList<Country> getCountries(){
+    private ArrayList<Country> loadData(){
         CountryJSONLoader loader = new CountryJSONLoader(mContext);
         ArrayList<Country> countries = new ArrayList<Country>();
         try {
