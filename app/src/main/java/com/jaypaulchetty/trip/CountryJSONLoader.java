@@ -13,16 +13,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CountryJSONLoader {
     private Context mContext;
+    private static final String TAG = "CountryJSONLoader";
+
     public CountryJSONLoader(Context c){
         mContext = c;
     }
-
-    public ArrayList<Country> loadCountries() throws IOException, JSONException {
-        Log.d("JSON","loading JSON from asset");
-        ArrayList<Country> countries = new ArrayList<Country>();
+    public Map<String, ArrayList<Country>> loadCountries() throws IOException, JSONException {
+        Log.d(TAG,"loading JSON from asset");
+//
+        Map<String, ArrayList<Country>> map = new HashMap<String, ArrayList<Country>>();
         BufferedReader reader = null;
         try {
             InputStream in = mContext.getAssets().open("countries.json");
@@ -35,10 +40,25 @@ public class CountryJSONLoader {
             }
             //Parse the JSON using JSONTokener
             JSONArray array = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
+
+            ArrayList<Country> allCountries = new ArrayList<Country>();
             //Build the array of from JSONObjects
             for(int i = 0; i < array.length(); i++){
-                countries.add(new Country(array.getJSONObject(i)));
+                String region = array.getJSONObject(i).getString("region");
+                Log.d(TAG,"loading region " + region);
+                ArrayList<Country> countriesForRegion = map.get(region);
+                if (countriesForRegion == null) {
+                    countriesForRegion = new ArrayList<Country>();
+                    map.put(region, countriesForRegion );
+                }
+                Country country = new Country(array.getJSONObject(i));
+                countriesForRegion.add(country);
+                allCountries.add(country);
             }
+
+            map.put("World", allCountries);
+
+            Log.d(TAG,"loading done " + map);
 
 
         } catch(FileNotFoundException e){
@@ -47,6 +67,6 @@ public class CountryJSONLoader {
             if (reader != null)
                 reader.close();
         }
-        return countries;
+        return map;
     }
 }

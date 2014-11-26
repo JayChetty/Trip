@@ -23,21 +23,22 @@ public class TripFragment extends ListFragment {
     private Trip mTrip;
     private TripArrayAdapter mAdapter;
     private static final String TAG ="ListFragment";
+    String mRegion;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        String region = getActivity().getIntent().getStringExtra(REGION_FOR_TRIPS);
-        Log.d(TAG, "fragment starting with region " + region);
+        mRegion = getActivity().getIntent().getStringExtra(REGION_FOR_TRIPS);
+        Log.d(TAG, "fragment starting with region " +  mRegion);
         TripCreator tripCreator =  TripCreator.get(getActivity());
-        mTrip = tripCreator.createTrip();
+        mTrip = tripCreator.createTrip( mRegion);
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
     }
 
     private void createNewTrip(){
-        mTrip = TripCreator.get(getActivity()).createTrip();
+        mTrip = TripCreator.get(getActivity()).createTrip(mRegion);
         mAdapter.clear();
         mAdapter.addAll(mTrip.getRoute(0));
         mAdapter.notifyDataSetChanged();
@@ -124,7 +125,7 @@ public class TripFragment extends ListFragment {
             super(context, resource, objects);
             mAnswerViews = new ArrayList<AutoCompleteTextView>();
             TripCreator tripCreator =  TripCreator.get(getActivity());
-            mCountryAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, tripCreator.getCountryNames());
+            mCountryAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, tripCreator.getCountryNames(mRegion));
         }
 
         @Override

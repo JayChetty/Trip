@@ -5,6 +5,8 @@ import android.nfc.Tag;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -12,7 +14,8 @@ import java.util.Random;
  */
 public class TripCreator {
     private static TripCreator sTripCreator;
-    private ArrayList<Country> mCountries;
+//    private ArrayList<Country> mCountries;
+    private Map<String, ArrayList<Country>> mCountriesByRegion = new HashMap<String, ArrayList<Country>>();
     private Context mContext;
     private static final String TAG="TripCreator";
 
@@ -24,33 +27,29 @@ public class TripCreator {
         return sTripCreator;
     }
 
-    public ArrayList<String> getCountryNames(){
+
+    public ArrayList<String> getCountryNames(String region){
+        ArrayList<Country> countries = mCountriesByRegion.get(region);
         ArrayList<String> countryNames = new ArrayList<String>();
-        int length = mCountries.size();
+        int length = countries.size();
         for(int i=0;i<length;i++){
-            countryNames.add(mCountries.get(i).getName());
+            countryNames.add(countries.get(i).getName());
         }
         return countryNames;
     }
 
     private TripCreator(Context context){
         mContext = context;
-        mCountries = loadData();//This should be possibly done on a background thread
-    }
-
-    private ArrayList<Country> loadData(){
         CountryJSONLoader loader = new CountryJSONLoader(mContext);
-        ArrayList<Country> countries = new ArrayList<Country>();
         try {
-            countries = loader.loadCountries();
+            mCountriesByRegion = loader.loadCountries();
         } catch (Exception e){
-            Log.e("TRip", "error loading crimes", e);
-            countries = new ArrayList<Country>();
+            Log.e(TAG, "error loading crimes", e);
         }
-        return countries;
     }
 
-    public Trip createTrip(){
+
+    public Trip createTrip(String region){
 
         ArrayList<ArrayList<Country>> routes = new ArrayList<ArrayList<Country>>();
         Random random = new Random();
@@ -58,23 +57,25 @@ public class TripCreator {
         Log.d(TAG, "creating trip");
 
         while(routes.size() == 0) {
-
+            ArrayList<Country> countries = mCountriesByRegion.get(region);
+            Log.d(TAG, "creating trip for region"+ region);
+            Log.d(TAG, "creating trip for region countries"+ countries);
             //randomly select start country
-            int start = random.nextInt(mCountries.size()-1);
+            int start = random.nextInt(countries.size()-1);
 //            int start = 25; //test Bolivia
             Log.d(TAG, "start" + start);
-            Country startCountry = mCountries.get(start);
+            Country startCountry = countries.get(start);
             Log.d(TAG, "start country" + startCountry);
 
             //create routes
-            ArrayList<Country> neighbours = getNeighbours(startCountry);
+            ArrayList<Country> neighbours = getNeighbours(startCountry, region);
 
             Log.d(TAG, "neigbours" + neighbours);
 
             for (int i = 0; i < neighbours.size(); i++) {
                 Country neighbour = neighbours.get(i);
                 Log.d(TAG, "from neigbour" + neighbour);
-                ArrayList<Country> secondNeighbours = getNeighbours(neighbour);
+                ArrayList<Country> secondNeighbours = getNeighbours(neighbour, region);
                 Log.d(TAG, "its neigbours" + secondNeighbours);
                 for (int j = 0; j < secondNeighbours.size(); j++) {
                     Country secondNeighbour = secondNeighbours.get(j);
@@ -119,23 +120,24 @@ public class TripCreator {
         return trip;
     }
 
-    public ArrayList<Country> getNeighbours(Country country){
+    public ArrayList<Country> getNeighbours(Country country, String region){
         ArrayList<String> neighbourStrings = country.getNeighboursCodes();
         ArrayList<Country> neighbours = new ArrayList<Country>();
         int length = neighbourStrings.size();
         for(int i=0; i<length;i++){
-            Country neighbour = getCountry(neighbourStrings.get(i));
+            Country neighbour = getCountry(neighbourStrings.get(i), region);
             if (neighbour != null) {
-                neighbours.add(getCountry(neighbourStrings.get(i)));
+                neighbours.add(getCountry(neighbourStrings.get(i), region));
             }
         }
         return neighbours;
     }
 
-    public Country getCountry(String code){
-        int length = mCountries.size();
+    public Country getCountry(String code, String region){
+        ArrayList<Country> countries = mCountriesByRegion.get(region);
+        int length = countries.size();
         for(int i = 0; i < length ; i++){
-            Country country = mCountries.get(i);
+            Country country = countries.get(i);
             if(country.getCode().equals(code)){
                return country;
             }

@@ -1,0 +1,14 @@
+package com.jaypaulchetty.trip;
+
+import android.support.v4.app.Fragment;
+
+/**
+ * Created by jay on 26/11/14.
+ */
+public class LearnMapActivity extends SingleFragmentActivity{
+    @Override
+    protected Fragment createFragment(){
+
+        return new LearnMapFragment();
+    };
+}
