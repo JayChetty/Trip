@@ -6,12 +6,12 @@
     <item android:id="@+id/menu_item_show_answer"
         android:title="@string/show_answer"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText" />
 
 
     <item android:id="@+id/menu_item_check_route"
         android:title="@string/check_route"
         android:orderInCategory="101"
-        android:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom|withText" />
 
 </menu>

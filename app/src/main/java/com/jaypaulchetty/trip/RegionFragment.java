@@ -1,32 +1,33 @@
 package com.jaypaulchetty.trip;
 
-import android.content.Intent;
+
+
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.ViewGroup;
 
-public class RegionFragment extends ListFragment {
-    private static final String TAG = "ListFragment";
 
-    private String[] mRegions= {"Africa", "Americas", "Europe", "Oceania", "Asia", "World"};
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, mRegions);
-        setListAdapter(adapter);
+
+/**
+ * A simple {@link Fragment} subclass.
+ *
+ */
+public class RegionFragment extends Fragment {
+
+
+    public RegionFragment() {
+        // Required empty public constructor
     }
 
+
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Intent i = new Intent(getActivity(),TripActivity.class);
-        String region = mRegions[position];
-        i.putExtra(TripFragment.REGION_FOR_TRIPS, region);
-        Log.d(TAG, region);
-        startActivity(i);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_region, container, false);
     }
+
+
 }

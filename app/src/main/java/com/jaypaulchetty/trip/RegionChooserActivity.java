@@ -1,14 +1,11 @@
 package com.jaypaulchetty.trip;
-
 import android.support.v4.app.Fragment;
-
 /**
- * Created by jay on 26/11/14.
+ * Created by jay on 23/11/14.
  */
-public class LearnMapActivity extends SingleFragmentActivity{
+public class RegionChooserActivity extends SingleFragmentActivity{
     @Override
     protected Fragment createFragment(){
-
-        return new LearnMapFragment();
+        return new RegionChooserFragment();
     };
 }
