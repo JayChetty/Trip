@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 public class RegionActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        return null;
+        return new RegionFragment();
     }
 }
 

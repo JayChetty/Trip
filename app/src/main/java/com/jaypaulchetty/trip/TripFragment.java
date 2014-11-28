@@ -19,17 +19,16 @@ import java.util.List;
 
 
 public class TripFragment extends ListFragment {
-    public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.trip.region";
     private Trip mTrip;
     private TripArrayAdapter mAdapter;
     private static final String TAG ="ListFragment";
-    String mRegion;
+    private String mRegion;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mRegion = getActivity().getIntent().getStringExtra(REGION_FOR_TRIPS);
+        mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         Log.d(TAG, "fragment starting with region " +  mRegion);
         TripCreator tripCreator =  TripCreator.get(getActivity());
         mTrip = tripCreator.createTrip( mRegion);

@@ -13,8 +13,12 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
+            android:name=".RegionActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".RegionChooserActivity"
-            android:label="@string/title_activity_region" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
