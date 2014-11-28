@@ -2,6 +2,7 @@ package com.jaypaulchetty.trip;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -23,6 +24,8 @@ public class TripFragment extends ListFragment {
     private TripArrayAdapter mAdapter;
     private static final String TAG ="ListFragment";
     private String mRegion;
+    private int mTripNum = 1;
+    private int mNumTrips = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -41,6 +44,7 @@ public class TripFragment extends ListFragment {
         mAdapter.clear();
         mAdapter.addAll(mTrip.getRoute(0));
         mAdapter.notifyDataSetChanged();
+        mTripNum++;
     }
 
     private Boolean answerPasses(ArrayList<String> answers){
@@ -88,7 +92,14 @@ public class TripFragment extends ListFragment {
                     Log.d(TAG,"CORRECT");
                     Toast toast = Toast.makeText(this.getActivity(), "You did it!", Toast.LENGTH_LONG);
                     toast.show();
-                    createNewTrip();
+                    if (mTripNum == mNumTrips){
+                        Intent i = new Intent(getActivity(),RegionActivity.class);
+                        i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                        startActivity(i);
+                    }
+                    else {
+                        createNewTrip();
+                    }
                 }else{
                     Log.d(TAG,"FALSE");
                     Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);

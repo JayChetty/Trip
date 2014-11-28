@@ -2,8 +2,10 @@ package com.jaypaulchetty.trip;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.TextView;
  */
 public class RegionFragment extends Fragment {
     public static final String REGION_BEST_TIME = "com.jaypaulchetty.trip.region_best_time";
+    private static final String TAG = "RegionFragment";
     private String mRegion;
     private TextView mRegionView;
     private Button mStartButton;
@@ -25,9 +28,13 @@ public class RegionFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
-        mBestTime = getActivity().getIntent().getIntExtra(REGION_BEST_TIME, 1);
-
+        Intent intent = getActivity().getIntent();
+        mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
+        if (intent.hasExtra(REGION_BEST_TIME)) {
+            mBestTime = getActivity().getIntent().getIntExtra(REGION_BEST_TIME, 1);
+        } else{
+            mBestTime = 99;
+        }
     }
 
 
@@ -40,6 +47,16 @@ public class RegionFragment extends Fragment {
         mRegionView.setText(mRegion);
         mBestTimeView = (TextView) v.findViewById(R.id.best_time_view);
         mBestTimeView.setText("Best Time: " + mBestTime);
+        mStartButton = (Button) v.findViewById(R.id.start_button);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Clicked");
+                Intent i = new Intent(getActivity(), TripActivity.class);
+                i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                startActivity(i);
+            }
+        });
 
         return v;
     }

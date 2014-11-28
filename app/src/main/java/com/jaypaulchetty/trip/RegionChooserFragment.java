@@ -29,15 +29,9 @@ public class RegionChooserFragment extends ListFragment {
         Log.d(TAG, "Starting Click");
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(getActivity(),RegionActivity.class);
-        String[] regions =  RegionTimes.getRegions();
-        Log.d(TAG, "regions " + regions);
-        String region = regions[position];
-        Log.d(TAG, region);
+        String region = RegionTimes.getRegions()[position];
         i.putExtra(REGION_FOR_TRIPS, region);
-        int time = mRegionTimes.getTime(region);
-        Log.d(TAG, Integer.toString(time));
-        i.putExtra(RegionFragment.REGION_BEST_TIME, time);
-        Log.d(TAG, region);
+        i.putExtra(RegionFragment.REGION_BEST_TIME, mRegionTimes.getTime(region));
         startActivity(i);
     }
 }

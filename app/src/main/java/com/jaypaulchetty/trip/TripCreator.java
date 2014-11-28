@@ -95,8 +95,11 @@ public class TripCreator {
         }
         // randomly select route from selection
         Trip trip = new Trip();
-        int routeSelect = random.nextInt(routes.size()-1);
-        //int routeSelect = 0;
+        int routeSelect = 0;
+        if (routes.size() > 1 ) {
+             routeSelect = random.nextInt(routes.size() - 1);
+        }
+
         ArrayList<Country> targetRoute = routes.get(routeSelect);
         Log.d(TAG, "adding target" + targetRoute);
         trip.addRoute(targetRoute);
