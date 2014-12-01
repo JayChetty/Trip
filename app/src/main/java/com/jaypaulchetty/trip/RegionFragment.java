@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +26,8 @@ public class RegionFragment extends Fragment {
     private TextView mRegionView;
     private Button mStartButton;
     private TextView mBestTimeView;
-    private int mBestTime;
+    private long mBestTime;
+    private static final int REQUEST_PASSED = 1;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -33,7 +36,7 @@ public class RegionFragment extends Fragment {
         if (intent.hasExtra(REGION_BEST_TIME)) {
             mBestTime = getActivity().getIntent().getIntExtra(REGION_BEST_TIME, 1);
         } else{
-            mBestTime = 99;
+            mBestTime = 9999;
         }
     }
 
@@ -46,7 +49,7 @@ public class RegionFragment extends Fragment {
         mRegionView = (TextView) v.findViewById(R.id.region_view);
         mRegionView.setText(mRegion);
         mBestTimeView = (TextView) v.findViewById(R.id.best_time_view);
-        mBestTimeView.setText("Best Time: " + mBestTime);
+        displayBestTime();
         mStartButton = (Button) v.findViewById(R.id.start_button);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +57,40 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Clicked");
                 Intent i = new Intent(getActivity(), TripActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_PASSED);
             }
         });
 
         return v;
+    }
+
+    private void displayBestTime(){
+        mRegionView.setText("");
+        String out = String.format("%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes(mBestTime),
+                TimeUnit.MILLISECONDS.toSeconds(mBestTime)
+        );
+        mRegionView.setText(out);
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_PASSED) {
+            Log.d(TAG, "Got the result yo");
+            Boolean passed = data.getBooleanExtra(TripFragment.TRIP_PASSED, false);
+            if(passed){
+                Log.d(TAG, "Trip was passed yo");
+                int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
+                Log.d(TAG, "Trip taken was" + tripTime);
+                mBestTime = tripTime;
+                //need to also save to the time object RegionTimes
+                RegionTimes.get().setTime(mRegion, (int) tripTime);
+                ;
+            }
+            else{
+                Log.d(TAG, "Trip failed");
+            }
+        }
     }
 
 

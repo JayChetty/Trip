@@ -1,6 +1,7 @@
 package com.jaypaulchetty.trip;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,12 +21,18 @@ import java.util.List;
 
 
 public class TripFragment extends ListFragment {
+    public static final String TRIP_PASSED = "TripPassed";
+    public static final String TRIP_TIME = "TripTime";
     private Trip mTrip;
     private TripArrayAdapter mAdapter;
     private static final String TAG ="ListFragment";
     private String mRegion;
     private int mTripNum = 1;
-    private int mNumTrips = 3;
+    private int mNumTrips = 1;
+    private int mNumMistakes = 0;
+    private long mStartTime = 0;
+    private long mEndTime = 0;
+    private static final int sMistakesAllowed = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -37,6 +44,7 @@ public class TripFragment extends ListFragment {
         mTrip = tripCreator.createTrip( mRegion);
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
+        mStartTime = System.currentTimeMillis();
     }
 
     private void createNewTrip(){
@@ -66,6 +74,7 @@ public class TripFragment extends ListFragment {
         }
         return passed;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
@@ -93,15 +102,23 @@ public class TripFragment extends ListFragment {
                     Toast toast = Toast.makeText(this.getActivity(), "You did it!", Toast.LENGTH_LONG);
                     toast.show();
                     if (mTripNum == mNumTrips){
+                        mEndTime = System.currentTimeMillis();
+                        int timeTaken = (int) (mEndTime - mStartTime);
                         Intent i = new Intent(getActivity(),RegionActivity.class);
                         i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-                        startActivity(i);
+                        i.putExtra(TRIP_PASSED, true);
+                        i.putExtra(TRIP_TIME, timeTaken);
+                        Log.d(TAG,"setting result");
+                        getActivity().setResult(Activity.RESULT_OK, i);
+                        getActivity().finish();
+//                        startActivity(i);
                     }
                     else {
                         createNewTrip();
                     }
                 }else{
                     Log.d(TAG,"FALSE");
+                    mNumMistakes++;
                     Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);
                     toast.show();
                 }

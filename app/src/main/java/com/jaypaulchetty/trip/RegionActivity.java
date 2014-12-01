@@ -10,5 +10,6 @@ public class RegionActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         return new RegionFragment();
     }
+
 }
 

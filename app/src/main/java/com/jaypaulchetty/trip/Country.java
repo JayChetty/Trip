@@ -22,6 +22,8 @@ public class Country {
         mCode = json.getString("alpha3Code");
         mNeighboursCodes = new ArrayList<String>();
         JSONArray tempNeighbours= json.getJSONArray("borders");
+
+
         int len = tempNeighbours.length();
         if(len > 0) {
             for (int i = 0; i < len; i++) {
