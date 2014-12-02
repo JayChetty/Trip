@@ -26,18 +26,12 @@ public class RegionFragment extends Fragment {
     private TextView mRegionView;
     private Button mStartButton;
     private TextView mBestTimeView;
-    private long mBestTime;
     private static final int REQUEST_PASSED = 1;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Intent intent = getActivity().getIntent();
         mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
-        if (intent.hasExtra(REGION_BEST_TIME)) {
-            mBestTime = getActivity().getIntent().getIntExtra(REGION_BEST_TIME, 1);
-        } else{
-            mBestTime = 9999;
-        }
     }
 
 
@@ -65,12 +59,13 @@ public class RegionFragment extends Fragment {
     }
 
     private void displayBestTime(){
-        mRegionView.setText("");
+        int bestTime = RegionTimes.get(getActivity()).getTime(mRegion);
+        mBestTimeView.setText("");
         String out = String.format("%d min, %d sec",
-                TimeUnit.MILLISECONDS.toMinutes(mBestTime),
-                TimeUnit.MILLISECONDS.toSeconds(mBestTime)
+                TimeUnit.MILLISECONDS.toMinutes(bestTime),
+                TimeUnit.MILLISECONDS.toSeconds(bestTime)
         );
-        mRegionView.setText(out);
+        mBestTimeView.setText(out);
     }
 
 
@@ -82,15 +77,19 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Trip was passed yo");
                 int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
                 Log.d(TAG, "Trip taken was" + tripTime);
-                mBestTime = tripTime;
-                //need to also save to the time object RegionTimes
-                RegionTimes.get().setTime(mRegion, (int) tripTime);
-                ;
+                RegionTimes.get(getActivity()).setTime(mRegion, tripTime);
+                displayBestTime();
             }
             else{
                 Log.d(TAG, "Trip failed");
             }
         }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        RegionTimes.get(getActivity()).saveTimes();
     }
 
 

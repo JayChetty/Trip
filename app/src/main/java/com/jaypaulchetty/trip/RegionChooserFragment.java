@@ -18,8 +18,8 @@ public class RegionChooserFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        TripCreator tripCreator =  TripCreator.get(getActivity());
-        mRegionTimes = RegionTimes.get();
+        TripCreator tripCreator =  TripCreator.get(getActivity());//initiate here
+        mRegionTimes = RegionTimes.get(getActivity());
         ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionTimes.getRegions());
         setListAdapter(adapter);
     }
@@ -31,7 +31,7 @@ public class RegionChooserFragment extends ListFragment {
         Intent i = new Intent(getActivity(),RegionActivity.class);
         String region = RegionTimes.getRegions()[position];
         i.putExtra(REGION_FOR_TRIPS, region);
-        i.putExtra(RegionFragment.REGION_BEST_TIME, mRegionTimes.getTime(region));
+//        i.putExtra(RegionFragment.REGION_BEST_TIME, mRegionTimes.getTime(region));
         startActivity(i);
     }
 }
