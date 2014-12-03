@@ -2,6 +2,7 @@ package com.jaypaulchetty.trip;
 
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,9 +24,8 @@ public class RegionFragment extends Fragment {
     public static final String REGION_BEST_TIME = "com.jaypaulchetty.trip.region_best_time";
     private static final String TAG = "RegionFragment";
     private String mRegion;
-    private TextView mRegionView;
-    private Button mStartButton;
-    private TextView mBestTimeView;
+    private TextView mRegionView,mBestTimeView;
+    private Button mStartButton, mMapButton;
     private static final int REQUEST_PASSED = 1;
 
     public void onCreate(Bundle savedInstanceState){
@@ -54,12 +54,21 @@ public class RegionFragment extends Fragment {
                 startActivityForResult(i, REQUEST_PASSED);
             }
         });
+        mMapButton = (Button) v.findViewById(R.id.map_button);
+        mMapButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Log.d(TAG, "Clicked Map");
+                Intent i = new Intent(getActivity(), RegionMapActivity.class);
+                i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                startActivity(i);
+            }
+        });
 
         return v;
     }
 
     private void displayBestTime(){
-        int bestTime = RegionTimes.get(getActivity()).getTime(mRegion);
+        long bestTime = (long) RegionTimes.get(getActivity()).getTime(mRegion);
         mBestTimeView.setText("");
         String out = String.format("%d min, %d sec",
                 TimeUnit.MILLISECONDS.toMinutes(bestTime),
@@ -72,16 +81,17 @@ public class RegionFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_PASSED) {
             Log.d(TAG, "Got the result yo");
-            Boolean passed = data.getBooleanExtra(TripFragment.TRIP_PASSED, false);
-            if(passed){
-                Log.d(TAG, "Trip was passed yo");
-                int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
-                Log.d(TAG, "Trip taken was" + tripTime);
-                RegionTimes.get(getActivity()).setTime(mRegion, tripTime);
-                displayBestTime();
-            }
-            else{
-                Log.d(TAG, "Trip failed");
+            if(resultCode == Activity.RESULT_OK) {
+                Boolean passed = data.getBooleanExtra(TripFragment.TRIP_PASSED, false);
+                if (passed) {
+                    Log.d(TAG, "Trip was passed yo");
+                    int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
+                    Log.d(TAG, "Trip taken was" + tripTime);
+                    RegionTimes.get(getActivity()).setTime(mRegion, tripTime);
+                    displayBestTime();
+                } else {
+                    Log.d(TAG, "Trip failed");
+                }
             }
         }
     }
