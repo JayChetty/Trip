@@ -36,7 +36,7 @@ public class RegionTimes {
         Log.d(TAG, "Loading times");
         SharedPreferences settings = mContext.getSharedPreferences(TIMES_NAME, 0);
         for(String region : RegionTimes.getRegions()){
-            int time = settings.getInt(region,999999);
+            int time = settings.getInt(region,-1);
             Log.d(TAG, "region" + region + "time " + time);
             setTime(region, time);
         }

@@ -27,10 +27,12 @@ public class RegionFragment extends Fragment {
     private TextView mRegionView,mBestTimeView;
     private Button mStartButton, mMapButton;
     private static final int REQUEST_PASSED = 1;
+    private RegionTimes mRegionTimes;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Intent intent = getActivity().getIntent();
+        mRegionTimes = RegionTimes.get(getActivity());
         mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
     }
 
@@ -68,12 +70,18 @@ public class RegionFragment extends Fragment {
     }
 
     private void displayBestTime(){
-        long bestTime = (long) RegionTimes.get(getActivity()).getTime(mRegion);
+        long bestTime = (long) mRegionTimes.getTime(mRegion);
         mBestTimeView.setText("");
-        String out = String.format("%d min, %d sec",
-                TimeUnit.MILLISECONDS.toMinutes(bestTime),
-                TimeUnit.MILLISECONDS.toSeconds(bestTime)
-        );
+        String out = "";
+        if (bestTime > 0) {
+            out = String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes(bestTime),
+                    TimeUnit.MILLISECONDS.toSeconds(bestTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(bestTime))
+            );
+        }
+        else{
+            out = "Not Completed Yet";
+        }
         mBestTimeView.setText(out);
     }
 
@@ -87,8 +95,11 @@ public class RegionFragment extends Fragment {
                     Log.d(TAG, "Trip was passed yo");
                     int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
                     Log.d(TAG, "Trip taken was" + tripTime);
-                    RegionTimes.get(getActivity()).setTime(mRegion, tripTime);
-                    displayBestTime();
+                    int currentBestTime = mRegionTimes.getTime(mRegion);
+                    if(currentBestTime < 0 || tripTime < currentBestTime) {
+                        mRegionTimes.setTime(mRegion, tripTime);
+                        displayBestTime();
+                    }
                 } else {
                     Log.d(TAG, "Trip failed");
                 }
