@@ -14,22 +14,32 @@ import java.util.Random;
  */
 public class TripCreator {
     private static TripCreator sTripCreator;
-//    private ArrayList<Country> mCountries;
-    private Map<String, ArrayList<Country>> mCountriesByRegion = new HashMap<String, ArrayList<Country>>();
-    private Context mContext;
+    private static Map<String, ArrayList<Country>> sCountriesByRegion = new HashMap<String, ArrayList<Country>>();
     private static final String TAG="TripCreator";
 
+    public static void setCountries(Context context){
+        CountryJSONLoader loader = new CountryJSONLoader(context);
+        try {
+            sCountriesByRegion = loader.loadCountries();
+        } catch (Exception e){
+            Log.e(TAG, "error loading crimes", e);
+        }
+    }
 
-    public static TripCreator get(Context context){
+    public static void setCountries(Map<String, ArrayList<Country>>  countryList){
+        TripCreator.sCountriesByRegion = countryList;
+    }
+
+    public static TripCreator get(){
         if(sTripCreator == null){
-            sTripCreator = new TripCreator(context);
+            sTripCreator = new TripCreator();
         }
         return sTripCreator;
     }
 
 
     public ArrayList<String> getCountryNames(String region){
-        ArrayList<Country> countries = mCountriesByRegion.get(region);
+        ArrayList<Country> countries = sCountriesByRegion.get(region);
         ArrayList<String> countryNames = new ArrayList<String>();
         int length = countries.size();
         for(int i=0;i<length;i++){
@@ -37,17 +47,6 @@ public class TripCreator {
         }
         return countryNames;
     }
-
-    private TripCreator(Context context){
-        mContext = context;
-        CountryJSONLoader loader = new CountryJSONLoader(mContext);
-        try {
-            mCountriesByRegion = loader.loadCountries();
-        } catch (Exception e){
-            Log.e(TAG, "error loading crimes", e);
-        }
-    }
-
 
     public Trip createTrip(String region){
 
@@ -57,7 +56,7 @@ public class TripCreator {
         Log.d(TAG, "creating trip");
 
         while(routes.size() == 0) {
-            ArrayList<Country> countries = mCountriesByRegion.get(region);
+            ArrayList<Country> countries = sCountriesByRegion.get(region);
             Log.d(TAG, "creating trip for region"+ region);
             Log.d(TAG, "creating trip for region countries"+ countries);
             //randomly select start country
@@ -137,7 +136,7 @@ public class TripCreator {
     }
 
     public Country getCountry(String code, String region){
-        ArrayList<Country> countries = mCountriesByRegion.get(region);
+        ArrayList<Country> countries = sCountriesByRegion.get(region);
         int length = countries.size();
         for(int i = 0; i < length ; i++){
             Country country = countries.get(i);

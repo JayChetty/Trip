@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegionChooserFragment extends ListFragment {
     private static final String TAG = "RegionChooserFragment";
     public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.trip.region";
@@ -18,7 +22,7 @@ public class RegionChooserFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        TripCreator tripCreator =  TripCreator.get(getActivity());//initiate here
+        TripCreator.setCountries(getActivity());
         mRegionTimes = RegionTimes.get(getActivity());
         ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionTimes.getRegions());
         setListAdapter(adapter);

@@ -28,7 +28,7 @@ public class TripFragment extends ListFragment {
     private static final String TAG ="ListFragment";
     private String mRegion;
     private int mTripNum = 1;
-    private int mNumTrips = 3;
+    private int mNumTrips = 10;
     private int mNumMistakes = 0;
     private long mStartTime = 0;
     private long mEndTime = 0;
@@ -40,7 +40,7 @@ public class TripFragment extends ListFragment {
         setHasOptionsMenu(true);
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         Log.d(TAG, "fragment starting with region " +  mRegion);
-        TripCreator tripCreator =  TripCreator.get(getActivity());
+        TripCreator tripCreator =  TripCreator.get();
         mTrip = tripCreator.createTrip( mRegion);
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
@@ -48,7 +48,7 @@ public class TripFragment extends ListFragment {
     }
 
     private void createNewTrip(){
-        mTrip = TripCreator.get(getActivity()).createTrip(mRegion);
+        mTrip = TripCreator.get().createTrip(mRegion);
         mAdapter.clear();
         mAdapter.addAll(mTrip.getRoute(0));
         mAdapter.notifyDataSetChanged();
@@ -151,7 +151,7 @@ public class TripFragment extends ListFragment {
         public TripArrayAdapter(Context context, int resource, List<Country> objects) {
             super(context, resource, objects);
             mAnswerViews = new ArrayList<AutoCompleteTextView>();
-            TripCreator tripCreator =  TripCreator.get(getActivity());
+            TripCreator tripCreator =  TripCreator.get();
             mCountryAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, tripCreator.getCountryNames(mRegion));
         }
 

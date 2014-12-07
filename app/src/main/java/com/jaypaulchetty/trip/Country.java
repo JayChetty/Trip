@@ -21,15 +21,20 @@ public class Country {
         mName = json.getString("name");
         mCode = json.getString("alpha3Code");
         mNeighboursCodes = new ArrayList<String>();
+
         JSONArray tempNeighbours= json.getJSONArray("borders");
-
-
         int len = tempNeighbours.length();
         if(len > 0) {
             for (int i = 0; i < len; i++) {
                 mNeighboursCodes.add(tempNeighbours.get(i).toString());
             }
         }
+    }
+
+    public Country(String name, String code, ArrayList<String> neighbours){
+        mName = name;
+        mCode = code;
+        mNeighboursCodes = neighbours;
     }
 
     public String getName() { return mName; }
