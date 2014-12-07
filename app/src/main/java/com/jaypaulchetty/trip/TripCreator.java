@@ -48,6 +48,100 @@ public class TripCreator {
         return countryNames;
     }
 
+    public ArrayList<ArrayList<Country>> createSeedRoutes(Country country){
+        ArrayList<Country> seed = new ArrayList<Country>();
+        seed.add(country);
+        ArrayList<ArrayList<Country>> seedRoutes = new ArrayList<ArrayList<Country>>();
+        seedRoutes.add(seed);
+        return seedRoutes;
+    }
+
+    public ArrayList<ArrayList<Country>> extendRoutes(String region, ArrayList<ArrayList<Country>> inRoutes, int numExtensions){
+        ArrayList<ArrayList<Country>> outRoutes = inRoutes;
+        for(int i=0;i<numExtensions;i++){
+            outRoutes = extendRoutes(region, outRoutes);
+        }
+        return outRoutes;
+    }
+
+    public ArrayList<ArrayList<Country>> extendRoutes(String region,
+                                                      ArrayList<ArrayList<Country>> inRoutes
+                                                      ){
+        Boolean hasExtendedARoute = false;
+        //Make unique list of countries that exist
+        ArrayList<Country> existingCountries = new ArrayList<Country>();
+        for(ArrayList<Country> route : inRoutes){
+            for(Country country: route){
+                if(!existingCountries.contains(country)) {
+                    existingCountries.add(country);
+                }
+            }
+        }
+        //Create new routes from existing routes
+        ArrayList<ArrayList<Country>> outRoutes = new ArrayList<ArrayList<Country>>();
+        for(ArrayList<Country> route : inRoutes) {
+            Country lastCountryOfRoute = route.get(route.size()-1);
+            ArrayList<Country> neighbours = getNeighbours(lastCountryOfRoute, region);
+            for(Country country: neighbours) {
+                if (!existingCountries.contains(country)){
+                    ArrayList<Country> newRoute = new ArrayList<Country>(route);
+                    newRoute.add(country);
+                    outRoutes.add(newRoute);
+                    hasExtendedARoute = true;
+                }
+            }
+        }
+
+        return outRoutes;
+    }
+    public Trip createTrip(String region, int length) {
+        ArrayList<Country> countries = sCountriesByRegion.get(region);
+        Random random = new Random();
+        int start;
+        Country startCountry;
+
+
+        ArrayList<ArrayList<Country>> routes = new ArrayList<ArrayList<Country>>();
+        while(routes.size() == 0) {
+//            Log.d(TAG,"Starting loop");
+            start = random.nextInt(countries.size()-1);
+            startCountry = countries.get(start);
+            Log.d(TAG, "Start Country" + startCountry);
+
+            routes = extendRoutes(region, createSeedRoutes(startCountry),length-1);
+            Log.d(TAG, "Got Routes" + routes);
+        }
+
+        Trip trip = new Trip();
+        int routeSelect = 0;
+        if (routes.size() > 1 ) {
+            routeSelect = random.nextInt(routes.size() - 1);
+        }
+
+        ArrayList<Country> targetRoute = routes.get(routeSelect);
+        Log.d(TAG, "adding target" + targetRoute);
+        trip.addRoute(targetRoute);
+
+
+        //find other routes with this target
+        Country endCountry = targetRoute.get(targetRoute.size()-1);
+        Log.d(TAG, "target country" + endCountry);
+        for(int i = 0;i<routes.size();i++){
+            if(i != routeSelect) {
+                ArrayList<Country> route = routes.get(i);
+                Country lastCountry = route.get(route.size()-1);
+                if (lastCountry == endCountry) {
+                    trip.addRoute(route);
+                }
+            }
+        }
+
+        Log.d(TAG, "returning trip with routes " + trip.getRoutes());
+
+        return trip;
+
+    }
+
     public Trip createTrip(String region){
 
         ArrayList<ArrayList<Country>> routes = new ArrayList<ArrayList<Country>>();

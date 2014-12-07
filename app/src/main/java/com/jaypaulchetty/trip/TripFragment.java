@@ -33,6 +33,7 @@ public class TripFragment extends ListFragment {
     private long mStartTime = 0;
     private long mEndTime = 0;
     private static final int sMistakesAllowed = 3;
+    private int mTripLength = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -40,15 +41,18 @@ public class TripFragment extends ListFragment {
         setHasOptionsMenu(true);
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         Log.d(TAG, "fragment starting with region " +  mRegion);
-        TripCreator tripCreator =  TripCreator.get();
-        mTrip = tripCreator.createTrip( mRegion);
+        setTrip();
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
         mStartTime = System.currentTimeMillis();
     }
 
+    private void setTrip(){
+        mTrip = TripCreator.get().createTrip(mRegion,mTripLength);
+    }
+
     private void createNewTrip(){
-        mTrip = TripCreator.get().createTrip(mRegion);
+        setTrip();
         mAdapter.clear();
         mAdapter.addAll(mTrip.getRoute(0));
         mAdapter.notifyDataSetChanged();
