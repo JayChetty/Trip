@@ -35,6 +35,7 @@ public class TripCreatorTest extends TestCase {
         world.add(bl);
         world.add(bm);
         world.add(br);
+
         countriesByRegion.put("World", world);
         TripCreator.setCountries(countriesByRegion);
     }

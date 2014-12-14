@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
@@ -22,10 +24,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class RegionFragment extends Fragment {
     public static final String REGION_BEST_TIME = "com.jaypaulchetty.trip.region_best_time";
+    public static final String TRIP_LENGTH = "com.jaypaulchetty.trip.trip_length";
     private static final String TAG = "RegionFragment";
     private String mRegion;
     private TextView mRegionView,mBestTimeView;
     private Button mStartButton, mMapButton;
+    private Spinner mLengthSpinner;
     private static final int REQUEST_PASSED = 1;
     private RegionTimes mRegionTimes;
 
@@ -34,6 +38,7 @@ public class RegionFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         mRegionTimes = RegionTimes.get(getActivity());
         mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
+
     }
 
 
@@ -53,6 +58,9 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Clicked");
                 Intent i = new Intent(getActivity(), TripActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                int length = Integer.parseInt((mLengthSpinner.getSelectedItem().toString()));
+                i.putExtra(RegionFragment.TRIP_LENGTH, (length+2));
+                Log.d(TAG, "Length is" + length);
                 startActivityForResult(i, REQUEST_PASSED);
             }
         });
@@ -62,9 +70,16 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Clicked Map");
                 Intent i = new Intent(getActivity(), RegionMapActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+
                 startActivity(i);
             }
         });
+
+        mLengthSpinner  = (Spinner) v.findViewById(R.id.length_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.length_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mLengthSpinner.setAdapter(adapter);
 
         return v;
     }
