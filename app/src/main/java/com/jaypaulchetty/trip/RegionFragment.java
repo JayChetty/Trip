@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -32,6 +33,7 @@ public class RegionFragment extends Fragment {
     private Spinner mLengthSpinner;
     private static final int REQUEST_PASSED = 1;
     private RegionTimes mRegionTimes;
+    private int mTripLength = 1;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -58,9 +60,8 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Clicked");
                 Intent i = new Intent(getActivity(), TripActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-                int length = Integer.parseInt((mLengthSpinner.getSelectedItem().toString()));
-                i.putExtra(RegionFragment.TRIP_LENGTH, (length+2));
-                Log.d(TAG, "Length is" + length);
+                i.putExtra(RegionFragment.TRIP_LENGTH, (mTripLength+2));
+                Log.d(TAG, "Length is" + mTripLength);
                 startActivityForResult(i, REQUEST_PASSED);
             }
         });
@@ -80,12 +81,26 @@ public class RegionFragment extends Fragment {
                 R.array.length_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mLengthSpinner.setAdapter(adapter);
+        mLengthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mTripLength = Integer.parseInt((mLengthSpinner.getItemAtPosition(position).toString()));
+                displayBestTime();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return v;
     }
 
     private void displayBestTime(){
-        long bestTime = (long) mRegionTimes.getTime(mRegion);
+        long bestTime = (long) mRegionTimes.getTime(mRegion, mTripLength);
+        Log.d(TAG, "displaing best time" + bestTime);
         mBestTimeView.setText("");
         String out = "";
         if (bestTime > 0) {
@@ -110,9 +125,9 @@ public class RegionFragment extends Fragment {
                     Log.d(TAG, "Trip was passed yo");
                     int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
                     Log.d(TAG, "Trip taken was" + tripTime);
-                    int currentBestTime = mRegionTimes.getTime(mRegion);
+                    int currentBestTime = mRegionTimes.getTime(mRegion, mTripLength);
                     if(currentBestTime < 0 || tripTime < currentBestTime) {
-                        mRegionTimes.setTime(mRegion, tripTime);
+                        mRegionTimes.setTime(mRegion, mTripLength, tripTime);
                         displayBestTime();
                     }
                 } else {
