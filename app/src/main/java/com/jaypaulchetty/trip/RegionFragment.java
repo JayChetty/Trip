@@ -126,7 +126,7 @@ public class RegionFragment extends Fragment {
                     int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
                     Log.d(TAG, "Trip taken was" + tripTime);
                     int currentBestTime = mRegionTimes.getTime(mRegion, mTripLength);
-                    if(currentBestTime < 0 || tripTime < currentBestTime) {
+                    if(currentBestTime <= 0 || tripTime < currentBestTime) {
                         mRegionTimes.setTime(mRegion, mTripLength, tripTime);
                         displayBestTime();
                     }

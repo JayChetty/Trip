@@ -40,34 +40,18 @@ public class RegionTimes {
         Log.d(TAG, "Loading times");
         SharedPreferences settings = mContext.getSharedPreferences(TIMES_NAME, 0);
         String[] regions = RegionTimes.getRegions();
-        Log.d(TAG, "got regions yah" + regions.toString());
         for(String region : regions){
-            Log.d(TAG, "loading times for region " + region );
-            Set<String> set = settings.getStringSet("region", null);
-            Log.d(TAG, "got set " + set );
-            int[] timesArray = new int[3];
-
-
-            if(set != null) {
-                String[] stringArray=  set.toArray(new String[0]);
-                Log.d(TAG, "and string array " + stringArray );
-                for (int i = 0; i < 3; i++) {
-                    timesArray[i] = Integer.parseInt(stringArray[i]);
-                }
-            } else{
-                for (int i = 0; i < 3; i++) {
-                    timesArray[i] = -1;
-                }
+            Log.d(TAG, "getting times for region" + region);
+            mTimes.put(region, new int[3]);//init
+            for (int i = 0; i < 3; i++) {
+                int length = i+1;
+                String lengthString = Integer.toString(length);
+                int time = settings.getInt(region+lengthString,-1);
+                Log.d(TAG, "got time for length "+ length + " time  "  + time);
+                setTime(region,length,time);
             }
 
-            Log.d(TAG, "about to put something in"  + region );
-
-            mTimes.put(region, timesArray);
-
-            Log.d(TAG, "put something in"  + region );
-
         }
-        Log.d(TAG, "Loaded times");
     }
 
     public void saveTimes(){
@@ -75,13 +59,15 @@ public class RegionTimes {
         SharedPreferences settings = mContext.getSharedPreferences(TIMES_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
 
-        for(String region : RegionTimes.getRegions()){
-            int[] times = getTimes(region);
-            Set<String> set = new HashSet<String>();
-            for(int i: times){
-                set.add(Integer.toString(i));
+        String[] regions = RegionTimes.getRegions();
+        for(String region : regions){
+            for (int i = 0; i < 3; i++) {
+                int length = i+1;
+                String lengthString = Integer.toString(length);
+                int time = getTime(region, length);
+                editor.putInt(region+lengthString, time);
             }
-            editor.putStringSet(region, set);
+//
         }
         editor.commit();
     }
@@ -91,10 +77,9 @@ public class RegionTimes {
     }
 
     public int getTime(String region, int length){
-        Log.d(TAG,"Getting time Region" + region);
-        Log.d(TAG,"Getting time length" + length);
         int[] timesArray = mTimes.get(region);
-        return timesArray[length-1];
+        int time = timesArray[length-1];
+        return time;
     }
 
     public int[] getTimes(String region){
@@ -102,9 +87,6 @@ public class RegionTimes {
     }
 
     public void setTime(String region, int length, int time){
-        Log.d(TAG,"Setting time Region" + region);
-        Log.d(TAG,"Setting time length" + length);
-        Log.d(TAG,"Setting time" + time);
         int[] timesArray = mTimes.get(region);
         timesArray[length-1] = time;
     }

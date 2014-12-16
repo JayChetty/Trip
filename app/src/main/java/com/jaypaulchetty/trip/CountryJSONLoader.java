@@ -26,7 +26,7 @@ public class CountryJSONLoader {
     }
     public Map<String, ArrayList<Country>> loadCountries() throws IOException, JSONException {
         Log.d(TAG,"loading JSON from asset");
-//
+
         Map<String, ArrayList<Country>> map = new HashMap<String, ArrayList<Country>>();
         BufferedReader reader = null;
         try {
@@ -45,7 +45,6 @@ public class CountryJSONLoader {
             //Build the array of from JSONObjects
             for(int i = 0; i < array.length(); i++){
                 String region = array.getJSONObject(i).getString("region");
-                Log.d(TAG,"loading region " + region);
                 ArrayList<Country> countriesForRegion = map.get(region);
                 if (countriesForRegion == null) {
                     countriesForRegion = new ArrayList<Country>();
@@ -57,8 +56,6 @@ public class CountryJSONLoader {
             }
 
             map.put("World", allCountries);
-
-            Log.d(TAG,"loading done " + map);
 
 
         } catch(FileNotFoundException e){
