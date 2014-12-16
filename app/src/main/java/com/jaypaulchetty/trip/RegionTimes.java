@@ -12,9 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class RegionTimes {
-//    private static final String[] sRegions= {"Africa", "Americas", "Europe", "Asia", "World"};
-
-//    private HashMap<String, Integer> mTimes = new HashMap<String, Integer>();
+    private static final String[] sRegions= {"Africa", "Americas", "Europe", "Asia", "World"};
     private HashMap<String, int[]> mTimes = new HashMap<String, int[]>();
     private static RegionTimes sRegionTimes;
     public static final String TIMES_NAME = "MyTimesFile";
@@ -22,7 +20,7 @@ public class RegionTimes {
     private static final String TAG="RegionTimes";
 
     public static String[] getRegions(){
-        return new String[] {"Africa", "Americas", "Europe", "Asia", "World"};
+       return sRegions;
     }
 
     public static RegionTimes get(Context context){
@@ -39,8 +37,7 @@ public class RegionTimes {
     public void loadTimes(){
         Log.d(TAG, "Loading times");
         SharedPreferences settings = mContext.getSharedPreferences(TIMES_NAME, 0);
-        String[] regions = RegionTimes.getRegions();
-        for(String region : regions){
+        for(String region : sRegions){
             Log.d(TAG, "getting times for region" + region);
             mTimes.put(region, new int[3]);//init
             for (int i = 0; i < 3; i++) {
@@ -55,19 +52,15 @@ public class RegionTimes {
     }
 
     public void saveTimes(){
-        Log.d(TAG, "Saving times");
         SharedPreferences settings = mContext.getSharedPreferences(TIMES_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-
-        String[] regions = RegionTimes.getRegions();
-        for(String region : regions){
+        for(String region : sRegions){
             for (int i = 0; i < 3; i++) {
                 int length = i+1;
                 String lengthString = Integer.toString(length);
                 int time = getTime(region, length);
                 editor.putInt(region+lengthString, time);
             }
-//
         }
         editor.commit();
     }
