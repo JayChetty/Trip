@@ -71,7 +71,6 @@ public class RegionFragment extends Fragment {
                 Log.d(TAG, "Clicked Map");
                 Intent i = new Intent(getActivity(), RegionMapActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-
                 startActivity(i);
             }
         });

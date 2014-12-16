@@ -28,7 +28,7 @@ public class TripFragment extends ListFragment {
     private static final String TAG ="ListFragment";
     private String mRegion;
     private int mTripNum = 1;
-    private int mNumTrips = 1;
+    private int mNumTrips = 10;
     private int mNumMistakes = 0;
     private long mStartTime = 0;
     private long mEndTime = 0;
