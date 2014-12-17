@@ -17,14 +17,14 @@ public class RegionChooserFragment extends ListFragment {
     public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.trip.region";
     public String[] mRegions;
 
-    private RegionTimes mRegionTimes;
+    private RegionScores mRegionScores;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         TripCreator.setCountries(getActivity());
-        mRegionTimes = RegionTimes.get(getActivity());
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionTimes.getRegions());
+        mRegionScores = RegionScores.get(getActivity());
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionScores.getRegions());
         setListAdapter(adapter);
     }
 
@@ -33,7 +33,7 @@ public class RegionChooserFragment extends ListFragment {
         Log.d(TAG, "Starting Click");
         super.onListItemClick(l, v, position, id);
         Intent i = new Intent(getActivity(),RegionActivity.class);
-        String region = RegionTimes.getRegions()[position];
+        String region = RegionScores.getRegions()[position];
         i.putExtra(REGION_FOR_TRIPS, region);
 //        i.putExtra(RegionFragment.REGION_BEST_TIME, mRegionTimes.getTime(region));
         startActivity(i);

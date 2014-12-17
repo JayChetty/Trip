@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,17 +30,18 @@ public class RegionFragment extends Fragment {
     public static final String TRIP_LENGTH = "com.jaypaulchetty.trip.trip_length";
     private static final String TAG = "RegionFragment";
     private String mRegion;
-    private TextView mRegionView,mBestTimeView;
+    private TextView mRegionView,mBestScoreView;
     private Button mStartButton, mMapButton;
-    private Spinner mLengthSpinner;
+//    private Spinner mLengthSpinner;
     private static final int REQUEST_PASSED = 1;
-    private RegionTimes mRegionTimes;
+    private RegionScores mRegionScores;
     private int mTripLength = 1;
+    private RadioButton mLevel1Button,mLevel2Button,mLevel3Button;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Intent intent = getActivity().getIntent();
-        mRegionTimes = RegionTimes.get(getActivity());
+        mRegionScores = RegionScores.get(getActivity());
         mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
 
     }
@@ -51,8 +54,9 @@ public class RegionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_region, container, false);
         mRegionView = (TextView) v.findViewById(R.id.region_view);
         mRegionView.setText(mRegion);
-        mBestTimeView = (TextView) v.findViewById(R.id.best_time_view);
-        displayBestTime();
+        mBestScoreView = (TextView) v.findViewById(R.id.best_score_view);
+        displayBestScore();
+
         mStartButton = (Button) v.findViewById(R.id.start_button);
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,43 +79,78 @@ public class RegionFragment extends Fragment {
             }
         });
 
-        mLengthSpinner  = (Spinner) v.findViewById(R.id.length_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.length_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mLengthSpinner.setAdapter(adapter);
-        mLengthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mLevel1Button = (RadioButton) v.findViewById(R.id.radio_level_1);
+        mLevel2Button = (RadioButton) v.findViewById(R.id.radio_level_2);
+        mLevel3Button = (RadioButton) v.findViewById(R.id.radio_level_3);
+//        b.setEnabled(false);
+        disableLevels(true);
 
+        RadioGroup rg = (RadioGroup) v.findViewById(R.id.radio_level_group);
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mTripLength = Integer.parseInt((mLengthSpinner.getItemAtPosition(position).toString()));
-                displayBestTime();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                switch(checkedId)
+                {
+                    case R.id.radio_level_1:
+                        mTripLength = 1;
+                        break;
+                    case R.id.radio_level_2:
+                        mTripLength = 2;
+                        break;
+                    case R.id.radio_level_3:
+                        mTripLength = 3;
+                        break;
+                }
+                displayBestScore();
             }
         });
+
+
 
         return v;
     }
 
-    private void displayBestTime(){
-        long bestTime = (long) mRegionTimes.getTime(mRegion, mTripLength);
-        Log.d(TAG, "displaing best time" + bestTime);
-        mBestTimeView.setText("");
+    private void disableLevels(boolean goToHighest){
+        mLevel1Button.setEnabled(true);
+        mLevel2Button.setEnabled(true);
+        mLevel3Button.setEnabled(true);
+        if(mRegionScores.getGrade(mRegion, 1) == 0) {//not passed any
+            mLevel2Button.setEnabled(false);
+            mLevel3Button.setEnabled(false);
+            if(goToHighest){
+                mLevel1Button.setChecked(true);
+            }
+        }
+
+        else if(mRegionScores.getGrade(mRegion, 2) == 0){//passed 1
+            mLevel3Button.setEnabled(false);
+            if(goToHighest){
+                mLevel2Button.setChecked(true);
+            }
+        }
+        else{//passed 2
+            if(goToHighest){
+                mLevel3Button.setChecked(true);
+            }
+        }
+
+    }
+
+
+    private void displayBestScore(){
+        long bestScore = (long) mRegionScores.getScore(mRegion, mTripLength);
+        Log.d(TAG, "displaing best scre" + bestScore);
+        mBestScoreView.setText("");
         String out = "";
-        if (bestTime > 0) {
-            out = String.format("%d min, %d sec",
-                    TimeUnit.MILLISECONDS.toMinutes(bestTime),
-                    TimeUnit.MILLISECONDS.toSeconds(bestTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(bestTime))
-            );
+        if (bestScore > 0) {
+            out = "Best Score: " + bestScore;
         }
         else{
             out = "Not Completed Yet";
         }
-        mBestTimeView.setText(out);
+        mBestScoreView.setText(out);
     }
 
 
@@ -122,12 +161,13 @@ public class RegionFragment extends Fragment {
                 Boolean passed = data.getBooleanExtra(TripFragment.TRIP_PASSED, false);
                 if (passed) {
                     Log.d(TAG, "Trip was passed yo");
-                    int tripTime = data.getIntExtra(TripFragment.TRIP_TIME, 0);
-                    Log.d(TAG, "Trip taken was" + tripTime);
-                    int currentBestTime = mRegionTimes.getTime(mRegion, mTripLength);
-                    if(currentBestTime <= 0 || tripTime < currentBestTime) {
-                        mRegionTimes.setTime(mRegion, mTripLength, tripTime);
-                        displayBestTime();
+                    int tripScore = data.getIntExtra(TripFragment.TRIP_SCORE, 0);
+                    Log.d(TAG, "Trip taken was" + tripScore);
+                    int currentBestScore = mRegionScores.getScore(mRegion, mTripLength);
+                    if(currentBestScore <= 0 || tripScore > currentBestScore) {
+                        mRegionScores.setScore(mRegion, mTripLength, tripScore);
+                        displayBestScore();
+                        disableLevels(false);
                     }
                 } else {
                     Log.d(TAG, "Trip failed");
@@ -139,7 +179,7 @@ public class RegionFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        RegionTimes.get(getActivity()).saveTimes();
+        RegionScores.get(getActivity()).saveScores();
     }
 
 
