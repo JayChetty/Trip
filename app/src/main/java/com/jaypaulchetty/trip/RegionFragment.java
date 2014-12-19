@@ -30,7 +30,7 @@ public class RegionFragment extends Fragment {
     public static final String TRIP_LENGTH = "com.jaypaulchetty.trip.trip_length";
     private static final String TAG = "RegionFragment";
     private String mRegion;
-    private TextView mRegionView,mBestScoreView;
+    private TextView mRegionView,mBestScoreView, mTargetScoreView;
     private Button mStartButton, mMapButton;
 //    private Spinner mLengthSpinner;
     private static final int REQUEST_PASSED = 1;
@@ -56,6 +56,9 @@ public class RegionFragment extends Fragment {
         mRegionView.setText(mRegion);
         mBestScoreView = (TextView) v.findViewById(R.id.best_score_view);
         displayBestScore();
+
+        mTargetScoreView = (TextView) v.findViewById(R.id.target_score_view);
+        mTargetScoreView.setText("Target: " + mRegionScores.getPassMark() + "   Merit: " +  mRegionScores.getMeritMark() + "   Distinction: " +mRegionScores.getDistinctionMark());
 
         mStartButton = (Button) v.findViewById(R.id.start_button);
         mStartButton.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +86,6 @@ public class RegionFragment extends Fragment {
         mLevel2Button = (RadioButton) v.findViewById(R.id.radio_level_2);
         mLevel3Button = (RadioButton) v.findViewById(R.id.radio_level_3);
 //        b.setEnabled(false);
-        disableLevels(true);
 
         RadioGroup rg = (RadioGroup) v.findViewById(R.id.radio_level_group);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -106,6 +108,8 @@ public class RegionFragment extends Fragment {
                 displayBestScore();
             }
         });
+
+        disableLevels(true);
 
 
 

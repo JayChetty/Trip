@@ -37,6 +37,17 @@ public class RegionScores {
         loadScores();
     }
 
+    public int getPassMark(){
+        return mPassMark;
+    }
+    public int getMeritMark(){
+        return mMeritMark;
+    }
+    public int getDistinctionMark(){
+        return mDistinctionMark;
+    }
+
+
     public void loadScores(){
         Log.d(TAG, "Loading scores");
         SharedPreferences settings = mContext.getSharedPreferences(SCORES_NAME, 0);

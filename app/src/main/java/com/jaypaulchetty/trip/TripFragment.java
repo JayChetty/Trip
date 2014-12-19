@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.ListFragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -34,19 +36,32 @@ public class TripFragment extends ListFragment {
     private long mStartTime = 0;
     private long mEndTime = 0;
     private static final int sMistakesAllowed = 3;
-    private int mTripLength = 3;
+    private int mTripLength = 1;
+    private long mDuration = 60000;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
-        mTripLength = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_LENGTH, 3);
+        mTripLength = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_LENGTH, 1);
+
         Log.d(TAG, "fragment starting with region " +  mRegion);
         setTrip();
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
         setListAdapter(mAdapter);
-        new CountDownTimer(60000, 1000) {
+        switch(mTripLength) {
+            case 1:
+                mDuration = 60000;
+                break;
+            case 2:
+                mDuration = 90000;
+                break;
+            case 3:
+                mDuration = 120000;
+                break;
+        }
+        new CountDownTimer(mDuration, 1000) {
 
             public void onTick(long millisUntilFinished) {
 //                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -113,28 +128,6 @@ public class TripFragment extends ListFragment {
                 Toast answerToast = Toast.makeText(getActivity(), answer, Toast.LENGTH_LONG);
                 answerToast.show();
                 return true;
-            case R.id.menu_item_check_route:
-                Log.d(TAG,"item clicked");
-                ArrayList<AutoCompleteTextView> answerViews = mAdapter.getAnswerViews();
-                int length = answerViews.size();
-                ArrayList<String> answers = new ArrayList<String>();
-                //put together string of arrays
-                for(int j=0; j<length; j++){
-                    String answerString = answerViews.get(j).getText().toString();
-                    answers.add(answerString);
-                }
-                if(answerPasses(answers)){
-                    Log.d(TAG,"CORRECT");
-                    mNumCompleted++;
-                    Toast toast = Toast.makeText(this.getActivity(), "Correct!", Toast.LENGTH_LONG);
-                    toast.show();
-                    createNewTrip();
-                }else{
-                    Log.d(TAG,"FALSE");
-                    Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -173,6 +166,29 @@ public class TripFragment extends ListFragment {
             mAnswerViews.clear();
         }
 
+        private void checkAnswer(){
+            Log.d(TAG, "Item has been sheclected Yo");
+            ArrayList<AutoCompleteTextView> answerViews = mAdapter.getAnswerViews();
+            int length = answerViews.size();
+            ArrayList<String> answers = new ArrayList<String>();
+            //put together string of arrays
+            for(int j=0; j<length; j++){
+                String answerString = answerViews.get(j).getText().toString();
+                answers.add(answerString);
+            }
+            if(answerPasses(answers)){
+                Log.d(TAG,"CORRECT");
+                mNumCompleted++;
+//                            Toast toast = Toast.makeText(this.getActivity(), "Correct!", Toast.LENGTH_LONG);
+//                            toast.show();
+                createNewTrip();
+            }else{
+                Log.d(TAG,"FALSE");
+//                            Toast toast = Toast.makeText(this.getActivity(), "Sorry, not correct!", Toast.LENGTH_LONG);
+//                            toast.show();
+            }
+        }
+
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -184,6 +200,14 @@ public class TripFragment extends ListFragment {
             else {
                 AutoCompleteTextView view = new AutoCompleteTextView(getContext());
                 view.setAdapter(mCountryAdapter);
+
+                view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        checkAnswer();
+                    }
+                });
+
                 mAnswerViews.add(view);
                 out = view;
             }
