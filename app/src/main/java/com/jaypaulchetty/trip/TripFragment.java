@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 
@@ -41,6 +42,8 @@ public class TripFragment extends Fragment {
     private static final int sMistakesAllowed = 3;
     private int mTripLength = 3;
     private long mDuration = 60000;
+    TextView mTimeView;
+    CountDownTimer mTimer;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -67,10 +70,26 @@ public class TripFragment extends Fragment {
         }
 
 
-        new CountDownTimer(mDuration, 1000) {
+
+    }
+
+    public void onPause(){
+        mTimer.cancel();
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_trip, container, false);
+        mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
+        ListView list = (ListView) v.findViewById(R.id.trip_list);
+        list.setAdapter(mAdapter);
+        mTimeView = (TextView) v.findViewById(R.id.time_view);
+
+        mTimer = new CountDownTimer(mDuration, 1000) {
 
             public void onTick(long millisUntilFinished) {
-//                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+
+                mTimeView.setText("seconds remaining: " + millisUntilFinished / 1000);
             }
 
             public void onFinish() {
@@ -88,16 +107,6 @@ public class TripFragment extends Fragment {
 //                mTextField.setText("done!");
             }
         }.start();
-    }
-
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_trip, container, false);
-        mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
-        ListView list = (ListView) v.findViewById(R.id.trip_list);
-        list.setAdapter(mAdapter);
-
-
 
         return v;
     }
