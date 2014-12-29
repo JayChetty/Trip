@@ -42,8 +42,9 @@ public class TripFragment extends Fragment {
     private static final int sMistakesAllowed = 3;
     private int mTripLength = 3;
     private long mDuration = 60000;
-    TextView mTimeView;
+    TextView mTimeView, mCountView;
     CountDownTimer mTimer;
+    ListView mList;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -69,11 +70,10 @@ public class TripFragment extends Fragment {
                 break;
         }
 
-
-
     }
 
     public void onPause(){
+        super.onPause();
         mTimer.cancel();
     }
 
@@ -81,9 +81,12 @@ public class TripFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trip, container, false);
         mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
-        ListView list = (ListView) v.findViewById(R.id.trip_list);
-        list.setAdapter(mAdapter);
+        mList = (ListView) v.findViewById(R.id.trip_list);
+        mList.setAdapter(mAdapter);
+        mCountView = (TextView) v.findViewById(R.id.count_view);
+        mCountView.setText("Completed:" + mNumCompleted);
         mTimeView = (TextView) v.findViewById(R.id.time_view);
+
 
         mTimer = new CountDownTimer(mDuration, 1000) {
 
@@ -101,10 +104,8 @@ public class TripFragment extends Fragment {
                 i.putExtra(TRIP_PASSED, true);
                 i.putExtra(TRIP_SCORE, mNumCompleted);
                 Log.d(TAG,"setting result");
-                mNumCompleted++;
                 getActivity().setResult(Activity.RESULT_OK, i);
                 getActivity().finish();
-//                mTextField.setText("done!");
             }
         }.start();
 
@@ -124,12 +125,15 @@ public class TripFragment extends Fragment {
     }
 
     private Boolean answerPasses(ArrayList<String> answers){
+        Log.d(TAG,"Checking if passes" + answers);
         Boolean passed = false;
         for(int i=0;i<mTrip.numRoutes(); i++){//loop through routes
             Boolean correctRoute = true;
             for(int j=0; j<answers.size(); j++) {
                 String answerString = answers.get(j);
-                String solutionString = mTrip.getRoute(i).get(j+1).toString();
+                Log.d(TAG,"anwer stinrg" + answerString);
+                String solutionString = mTrip.getRoute(i).get(j).toString();
+                Log.d(TAG,"solution string" + solutionString);
                     if(!answerString.equals(solutionString)){
                         correctRoute = false;
                         break;
@@ -140,6 +144,7 @@ public class TripFragment extends Fragment {
                 break;
             }
         }
+        Log.d(TAG,"passed? returning" + passed);
         return passed;
     }
 
@@ -152,6 +157,8 @@ public class TripFragment extends Fragment {
                     answer = answer.concat("Route " + (i+1) + mTrip.getRoute(i).toString() +"\n");
                     Log.d(TAG,"concating string" + mTrip.getRoute(i).toString());
                 }
+
+
                 Toast answerToast = Toast.makeText(getActivity(), answer, Toast.LENGTH_LONG);
                 answerToast.show();
                 return true;
@@ -168,44 +175,28 @@ public class TripFragment extends Fragment {
 
 
     public class TripArrayAdapter extends ArrayAdapter<Country>{
-        private ArrayList<AutoCompleteTextView> mAnswerViews;
         private ArrayAdapter<String> mCountryAdapter;
-
-
-        public ArrayList<AutoCompleteTextView> getAnswerViews() {
-            return mAnswerViews;
-        }
-
-        public void clearAnswerViews(){
-            mAnswerViews.clear();
-        };
 
         public TripArrayAdapter(Context context, int resource, List<Country> objects) {
             super(context, resource, objects);
-            mAnswerViews = new ArrayList<AutoCompleteTextView>();
             TripCreator tripCreator =  TripCreator.get();
             mCountryAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, tripCreator.getCountryNames(mRegion));
         }
 
-        @Override
-        public void clear() {
-            super.clear();
-            mAnswerViews.clear();
-        }
 
         private void checkAnswer(){
-            Log.d(TAG, "Item has been sheclected Yo");
-            ArrayList<AutoCompleteTextView> answerViews = mAdapter.getAnswerViews();
-            int length = answerViews.size();
             ArrayList<String> answers = new ArrayList<String>();
-            //put together string of arrays
-            for(int j=0; j<length; j++){
-                String answerString = answerViews.get(j).getText().toString();
+            for(int i=0;i<getCount();i++){
+                TextView textView = (TextView) mList.getChildAt(i);
+                String answerString = textView.getText().toString();
+                Log.d(TAG, "adding this to the answer string " + answerString);
                 answers.add(answerString);
             }
+
             if(answerPasses(answers)){
                 Log.d(TAG,"CORRECT");
                 mNumCompleted++;
+                mCountView.setText("Completed:" + mNumCompleted);
 //                            Toast toast = Toast.makeText(this.getActivity(), "Correct!", Toast.LENGTH_LONG);
 //                            toast.show();
                 createNewTrip();
@@ -219,7 +210,8 @@ public class TripFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.d("GettingView","position" + position);
+            // this is happening  a lot and we are adding m\any
+            Log.d(TAG,"get View being called for position " + position);
             View out;
             if(position == getCount()-1 || position == 0 ) {
                 out = super.getView(position, convertView, parent);
@@ -235,7 +227,6 @@ public class TripFragment extends Fragment {
                     }
                 });
 
-                mAnswerViews.add(view);
                 out = view;
             }
             return out;
