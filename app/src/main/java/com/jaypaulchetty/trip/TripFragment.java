@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.support.v4.app.ListFragment;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,13 +18,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TripFragment extends ListFragment {
+public class TripFragment extends Fragment {
     public static final String TRIP_PASSED = "TripPassed";
     public static final String TRIP_SCORE = "TripScore";
     private Trip mTrip;
@@ -36,7 +39,7 @@ public class TripFragment extends ListFragment {
     private long mStartTime = 0;
     private long mEndTime = 0;
     private static final int sMistakesAllowed = 3;
-    private int mTripLength = 1;
+    private int mTripLength = 3;
     private long mDuration = 60000;
 
     @Override
@@ -48,19 +51,22 @@ public class TripFragment extends ListFragment {
 
         Log.d(TAG, "fragment starting with region " +  mRegion);
         setTrip();
-        mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
-        setListAdapter(mAdapter);
+
+        Log.d(TAG, "the length is" + mTripLength);
+
         switch(mTripLength) {
-            case 1:
+            case 3:
                 mDuration = 60000;
                 break;
-            case 2:
+            case 4:
                 mDuration = 90000;
                 break;
-            case 3:
+            case 5:
                 mDuration = 120000;
                 break;
         }
+
+
         new CountDownTimer(mDuration, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -82,6 +88,18 @@ public class TripFragment extends ListFragment {
 //                mTextField.setText("done!");
             }
         }.start();
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_trip, container, false);
+        mAdapter = new TripArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,mTrip.getRoute(0));
+        ListView list = (ListView) v.findViewById(R.id.trip_list);
+        list.setAdapter(mAdapter);
+
+
+
+        return v;
     }
 
     private void setTrip(){
