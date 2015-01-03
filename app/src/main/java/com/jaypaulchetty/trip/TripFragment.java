@@ -63,10 +63,10 @@ public class TripFragment extends Fragment {
                 mDuration = 60000;
                 break;
             case 4:
-                mDuration = 90000;
+                mDuration = 120000;
                 break;
             case 5:
-                mDuration = 120000;
+                mDuration = 180000;
                 break;
         }
 
@@ -96,14 +96,13 @@ public class TripFragment extends Fragment {
             }
 
             public void onFinish() {
-                Toast answerToast = Toast.makeText(getActivity(), "lalala", Toast.LENGTH_LONG);
+                Toast answerToast = Toast.makeText(getActivity(), "Time Up", Toast.LENGTH_LONG);
                 answerToast.show();
-                int timeTaken = (int) (mEndTime - mStartTime);
+//                int timeTaken = (int) (mEndTime - mStartTime);
                 Intent i = new Intent(getActivity(),RegionActivity.class);
                 i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
                 i.putExtra(TRIP_PASSED, true);
                 i.putExtra(TRIP_SCORE, mNumCompleted);
-                Log.d(TAG,"setting result");
                 getActivity().setResult(Activity.RESULT_OK, i);
                 getActivity().finish();
             }
@@ -125,15 +124,12 @@ public class TripFragment extends Fragment {
     }
 
     private Boolean answerPasses(ArrayList<String> answers){
-        Log.d(TAG,"Checking if passes" + answers);
         Boolean passed = false;
         for(int i=0;i<mTrip.numRoutes(); i++){//loop through routes
             Boolean correctRoute = true;
             for(int j=0; j<answers.size(); j++) {
                 String answerString = answers.get(j);
-                Log.d(TAG,"anwer stinrg" + answerString);
                 String solutionString = mTrip.getRoute(i).get(j).toString();
-                Log.d(TAG,"solution string" + solutionString);
                     if(!answerString.equals(solutionString)){
                         correctRoute = false;
                         break;
@@ -144,7 +140,6 @@ public class TripFragment extends Fragment {
                 break;
             }
         }
-        Log.d(TAG,"passed? returning" + passed);
         return passed;
     }
 
@@ -155,9 +150,7 @@ public class TripFragment extends Fragment {
                 String answer= "";
                 for(int i=0;i<mTrip.numRoutes(); i++) {
                     answer = answer.concat("Route " + (i+1) + mTrip.getRoute(i).toString() +"\n");
-                    Log.d(TAG,"concating string" + mTrip.getRoute(i).toString());
                 }
-
 
                 Toast answerToast = Toast.makeText(getActivity(), answer, Toast.LENGTH_LONG);
                 answerToast.show();
@@ -189,12 +182,10 @@ public class TripFragment extends Fragment {
             for(int i=0;i<getCount();i++){
                 TextView textView = (TextView) mList.getChildAt(i);
                 String answerString = textView.getText().toString();
-                Log.d(TAG, "adding this to the answer string " + answerString);
                 answers.add(answerString);
             }
 
             if(answerPasses(answers)){
-                Log.d(TAG,"CORRECT");
                 mNumCompleted++;
                 mCountView.setText("Completed:" + mNumCompleted);
 //                            Toast toast = Toast.makeText(this.getActivity(), "Correct!", Toast.LENGTH_LONG);
@@ -207,11 +198,9 @@ public class TripFragment extends Fragment {
             }
         }
 
-
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // this is happening  a lot and we are adding m\any
-            Log.d(TAG,"get View being called for position " + position);
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            // this is happening  a lot and we are adding many
             View out;
             if(position == getCount()-1 || position == 0 ) {
                 out = super.getView(position, convertView, parent);
@@ -222,10 +211,17 @@ public class TripFragment extends Fragment {
 
                 view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                        if (position < getCount()-2) {//move to next answer box if there is one
+                            mList.getChildAt(position + 1).requestFocus();
+                        }
                         checkAnswer();
                     }
                 });
+
+                if(position == 1) {
+                    view.requestFocus();
+                }
 
                 out = view;
             }
