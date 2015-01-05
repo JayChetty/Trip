@@ -54,8 +54,9 @@ public class RegionChooserFragment extends ListFragment {
             }
 
             String regionName = getItem(position);
-            TextView textview = (TextView) convertView.findViewById(R.id.region_list_item_title);
-            textview.setText(regionName);
+            TextView titleView = (TextView) convertView.findViewById(R.id.region_list_item_title);
+            titleView.setText(regionName);
+
 
             return convertView;
         }

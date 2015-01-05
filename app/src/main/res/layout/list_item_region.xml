@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/region_list_item_title"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:paddingRight="60dp"
+        android:text="Name"
         />
+
+    <GridLayout
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:columnCount="4"
+        android:rowCount="2"
+        >
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="1"
+            />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="2"
+            />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="3"
+        />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="4"
+        />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="5"
+            />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="6"
+            />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="7"
+            />
+        <TextView
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="8"
+            />
+    </GridLayout>
 </RelativeLayout>
