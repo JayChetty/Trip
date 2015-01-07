@@ -9,9 +9,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/region_list_item_title"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="60dp"
+        android:paddingTop="15dp"
+        android:paddingLeft="10dp"
         android:text="Name"
+        android:textColor = "#000000"
+        android:gravity= "center_vertical"
         />
 
     <GridLayout
@@ -20,47 +22,23 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:columnCount="4"
-        android:rowCount="2"
+        android:rowCount="1"
         >
-        <TextView
-            android:paddingBottom="10dp"
+
+        <ImageView
             android:paddingTop="10dp"
-            android:text="1"
+            android:id="@+id/one"
             />
-        <TextView
-            android:paddingBottom="10dp"
+        <ImageView
             android:paddingTop="10dp"
-            android:text="2"
+            android:id="@+id/two"
+            android:paddingLeft="5dp"
             />
-        <TextView
-            android:paddingBottom="10dp"
+        <ImageView
             android:paddingTop="10dp"
-            android:text="3"
-        />
-        <TextView
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="4"
-        />
-        <TextView
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="5"
-            />
-        <TextView
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="6"
-            />
-        <TextView
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="7"
-            />
-        <TextView
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="8"
+            android:id="@+id/three"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             />
     </GridLayout>
 </RelativeLayout>

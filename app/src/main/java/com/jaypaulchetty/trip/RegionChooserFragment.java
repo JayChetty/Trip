@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -54,6 +55,51 @@ public class RegionChooserFragment extends ListFragment {
             }
 
             String regionName = getItem(position);
+
+            ImageView oneBottom = (ImageView) convertView.findViewById(R.id.one);
+            ImageView twoBottom = (ImageView) convertView.findViewById(R.id.two);
+            ImageView threeBottom = (ImageView) convertView.findViewById(R.id.three);
+
+            RegionScores scores = RegionScores.get(getActivity());
+
+            if(scores.getGrade(regionName,1)==0) {
+                oneBottom.setImageResource(R.drawable.one_new);
+            } else if(scores.getGrade(regionName,1)==1){
+                oneBottom.setImageResource(R.drawable.one_completed);
+            } else {
+                oneBottom.setImageResource(R.drawable.one_bossed);
+            }
+
+            if(scores.getGrade(regionName,2)==0) {
+                twoBottom.setImageResource(R.drawable.two_new);
+            } else if(scores.getGrade(regionName,2)==1){
+                twoBottom.setImageResource(R.drawable.two_completed);
+            } else {
+                twoBottom.setImageResource(R.drawable.two_bossed);
+            }
+
+            if(scores.getGrade(regionName,3)==0) {
+                threeBottom.setImageResource(R.drawable.three_new);
+            } else if(scores.getGrade(regionName,3)==1){
+                threeBottom.setImageResource(R.drawable.three_completed);
+            } else {
+                threeBottom.setImageResource(R.drawable.three_bossed);
+            }
+
+
+//            ImageView oneTop = (ImageView) convertView.findViewById(R.id.one_top);
+//            oneTop.setImageResource(R.drawable.blank);
+//            ImageView twoTop = (ImageView) convertView.findViewById(R.id.two_top);
+//            twoTop.setImageResource(R.drawable.blank);
+//            ImageView threeTop = (ImageView) convertView.findViewById(R.id.three_top);
+//            threeTop.setImageResource(R.drawable.blank);
+//            ImageView finishTop = (ImageView) convertView.findViewById(R.id.finish_top);
+//            finishTop.setImageResource(R.drawable.blank);
+
+
+            
+            
+
             TextView titleView = (TextView) convertView.findViewById(R.id.region_list_item_title);
             titleView.setText(regionName);
 
