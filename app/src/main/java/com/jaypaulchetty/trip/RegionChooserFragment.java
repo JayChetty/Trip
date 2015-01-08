@@ -71,7 +71,12 @@ public class RegionChooserFragment extends ListFragment {
             }
 
             if(scores.getGrade(regionName,2)==0) {
-                twoBottom.setImageResource(R.drawable.two_new);
+                if(scores.getGrade(regionName,1)>0) {
+                    twoBottom.setImageResource(R.drawable.two_new);
+                }
+                else{
+                    twoBottom.setImageResource(R.drawable.two_restricted);
+                }
             } else if(scores.getGrade(regionName,2)==1){
                 twoBottom.setImageResource(R.drawable.two_completed);
             } else {
@@ -79,7 +84,12 @@ public class RegionChooserFragment extends ListFragment {
             }
 
             if(scores.getGrade(regionName,3)==0) {
-                threeBottom.setImageResource(R.drawable.three_new);
+                if(scores.getGrade(regionName,2)> 0) {
+                    threeBottom.setImageResource(R.drawable.three_new);
+                }
+                else{
+                    threeBottom.setImageResource(R.drawable.three_restricted);
+                }
             } else if(scores.getGrade(regionName,3)==1){
                 threeBottom.setImageResource(R.drawable.three_completed);
             } else {
