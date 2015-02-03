@@ -35,8 +35,6 @@ public class RegionFragment extends Fragment {
     private static final String TAG = "RegionFragment";
     private String mRegion;
     private TextView mRegionView,mBestScoreView, mTargetScoreView;
-    private Button mStartButton, mMapButton;
-//    private Spinner mLengthSpinner;
     private static final int REQUEST_PASSED = 1;
     private RegionScores mRegionScores;
     private int mTripLength = 1;
@@ -61,9 +59,17 @@ public class RegionFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.menu_item_show_map:
+                Intent i = new Intent(getActivity(), RegionMapActivity.class);
+                i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                startActivity(i);
                 Log.d(TAG, "Showing Map");
                 return true;
             case R.id.menu_item_start_trip:
+                Intent iTrip = new Intent(getActivity(), TripActivity.class);
+                iTrip.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
+                iTrip.putExtra(RegionFragment.TRIP_LENGTH, (mTripLength+2));
+                Log.d(TAG, "Length is" + mTripLength);
+                startActivityForResult(iTrip, REQUEST_PASSED);
                 Log.d(TAG, "Starting Trip");
                 return true;
             default:
@@ -78,35 +84,12 @@ public class RegionFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_region, container, false);
 
-        mRegionView = (TextView) v.findViewById(R.id.region_view);
-        mRegionView.setText(mRegion);
         mBestScoreView = (TextView) v.findViewById(R.id.best_score_view);
         displayBestScore();
 
         mTargetScoreView = (TextView) v.findViewById(R.id.target_score_view);
         mTargetScoreView.setText("Target: " + mRegionScores.getPassMark() + "   Merit: " +  mRegionScores.getMeritMark() + "   Distinction: " +mRegionScores.getDistinctionMark());
 
-        mStartButton = (Button) v.findViewById(R.id.start_button);
-        mStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked");
-                Intent i = new Intent(getActivity(), TripActivity.class);
-                i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-                i.putExtra(RegionFragment.TRIP_LENGTH, (mTripLength+2));
-                Log.d(TAG, "Length is" + mTripLength);
-                startActivityForResult(i, REQUEST_PASSED);
-            }
-        });
-        mMapButton = (Button) v.findViewById(R.id.map_button);
-        mMapButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked Map");
-                Intent i = new Intent(getActivity(), RegionMapActivity.class);
-                i.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
-                startActivity(i);
-            }
-        });
 
         mLevel1Button = (RadioButton) v.findViewById(R.id.radio_level_1);
         mLevel2Button = (RadioButton) v.findViewById(R.id.radio_level_2);
