@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +30,8 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class RegionFragment extends Fragment {
-    public static final String REGION_BEST_TIME = "com.jaypaulchetty.trip.region_best_time";
-    public static final String TRIP_LENGTH = "com.jaypaulchetty.trip.trip_length";
+    public static final String REGION_BEST_TIME = "com.jaypaulchetty.region.region_best_time";
+    public static final String TRIP_LENGTH = "com.jaypaulchetty.region.trip_length";
     private static final String TAG = "RegionFragment";
     private String mRegion;
     private TextView mRegionView,mBestScoreView, mTargetScoreView;
@@ -40,10 +44,31 @@ public class RegionFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Intent intent = getActivity().getIntent();
         mRegionScores = RegionScores.get(getActivity());
         mRegion = intent.getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
+        getActivity().getActionBar().setTitle(mRegion);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.region,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.menu_item_show_map:
+                Log.d(TAG, "Showing Map");
+                return true;
+            case R.id.menu_item_start_trip:
+                Log.d(TAG, "Starting Trip");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

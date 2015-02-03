@@ -136,7 +136,7 @@ public class TripCreator {
             }
         }
 
-        Log.d(TAG, "returning trip with routes " + trip.getRoutes());
+        Log.d(TAG, "returning region with routes " + trip.getRoutes());
 
         return trip;
 
@@ -147,12 +147,12 @@ public class TripCreator {
         ArrayList<ArrayList<Country>> routes = new ArrayList<ArrayList<Country>>();
         Random random = new Random();
 
-        Log.d(TAG, "creating trip");
+        Log.d(TAG, "creating region");
 
         while(routes.size() == 0) {
             ArrayList<Country> countries = sCountriesByRegion.get(region);
-            Log.d(TAG, "creating trip for region"+ region);
-            Log.d(TAG, "creating trip for region countries"+ countries);
+            Log.d(TAG, "creating region for region"+ region);
+            Log.d(TAG, "creating region for region countries"+ countries);
             //randomly select start country
             int start = random.nextInt(countries.size()-1);
 //            int start = 25; //test Bolivia
@@ -211,7 +211,7 @@ public class TripCreator {
             }
         }
 
-        Log.d(TAG, "returning trip with routes " + trip.getRoutes());
+        Log.d(TAG, "returning region with routes " + trip.getRoutes());
 
         return trip;
     }

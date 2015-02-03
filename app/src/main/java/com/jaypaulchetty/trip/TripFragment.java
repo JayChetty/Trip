@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,7 +46,7 @@ public class TripFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         mTripLength = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_LENGTH, 1);
 
@@ -140,30 +139,6 @@ public class TripFragment extends Fragment {
         }
         return passed;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.menu_item_show_answer:
-                String answer= "";
-                for(int i=0;i<mTrip.numRoutes(); i++) {
-                    answer = answer.concat("Route " + (i+1) + mTrip.getRoute(i).toString() +"\n");
-                }
-
-                Toast answerToast = Toast.makeText(getActivity(), answer, Toast.LENGTH_LONG);
-                answerToast.show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-       super.onCreateOptionsMenu(menu,inflater);
-       inflater.inflate(R.menu.trip,menu);
-    }
-
 
     public class TripArrayAdapter extends ArrayAdapter<Country>{
         private ArrayAdapter<String> mCountryAdapter;

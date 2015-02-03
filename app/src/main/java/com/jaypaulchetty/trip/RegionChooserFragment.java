@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -12,13 +13,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class RegionChooserFragment extends ListFragment {
     private static final String TAG = "RegionChooserFragment";
-    public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.trip.region";
+    public static final String REGION_FOR_TRIPS = "com.jaypaulchetty.region.region";
     public String[] mRegions;
 
     private RegionScores mRegionScores;
@@ -30,9 +32,20 @@ public class RegionChooserFragment extends ListFragment {
         mRegionScores = RegionScores.get(getActivity());
         ArrayList regionList = new ArrayList(Arrays.asList(RegionScores.getRegions()));
         RegionAdapter adapter= new RegionAdapter(regionList);
-//        ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionScores.getRegions());
         getActivity().getActionBar().setTitle("Regions");
         setListAdapter(adapter);
+
+        //hack to force menu to show on action bar
+        try {
+            ViewConfiguration config = ViewConfiguration.get(getActivity());
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
+        }
     }
 
     @Override

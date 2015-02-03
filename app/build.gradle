@@ -4,7 +4,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "20.0.0"
     defaultConfig {
-        applicationId "com.jaypaulchetty.trip"
+        applicationId "com.jaypaulchetty.region"
         minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
@@ -22,6 +22,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'
 }
