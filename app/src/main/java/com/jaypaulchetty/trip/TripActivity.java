@@ -1,6 +1,6 @@
 package com.jaypaulchetty.trip;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 
 public class TripActivity extends SingleFragmentActivity {

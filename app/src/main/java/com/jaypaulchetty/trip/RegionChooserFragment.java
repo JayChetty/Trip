@@ -1,11 +1,12 @@
 package com.jaypaulchetty.trip;
 
+import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -13,8 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class RegionChooserFragment extends ListFragment {
     private static final String TAG = "RegionChooserFragment";
@@ -31,6 +31,7 @@ public class RegionChooserFragment extends ListFragment {
         ArrayList regionList = new ArrayList(Arrays.asList(RegionScores.getRegions()));
         RegionAdapter adapter= new RegionAdapter(regionList);
 //        ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, RegionScores.getRegions());
+        getActivity().getActionBar().setTitle("Regions");
         setListAdapter(adapter);
     }
 

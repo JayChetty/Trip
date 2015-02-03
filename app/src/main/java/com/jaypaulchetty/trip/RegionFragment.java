@@ -5,7 +5,7 @@ package com.jaypaulchetty.trip;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +52,7 @@ public class RegionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_region, container, false);
+
         mRegionView = (TextView) v.findViewById(R.id.region_view);
         mRegionView.setText(mRegion);
         mBestScoreView = (TextView) v.findViewById(R.id.best_score_view);

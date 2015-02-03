@@ -1,6 +1,6 @@
 package com.jaypaulchetty.trip;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 /**
  * Created by jay on 03/12/14.
