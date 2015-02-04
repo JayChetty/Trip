@@ -17,19 +17,24 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/radio_level_group">
+        android:orientation="horizontal"
+        android:id="@+id/radio_level_group"
+        android:gravity="center">
         <RadioButton android:id="@+id/radio_level_1"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"/>
+            android:layout_width="wrap_content"
+            android:drawableBottom="@drawable/one_new"
+            android:layout_marginRight="20dp"
+            android:gravity="center"/>
         <RadioButton android:id="@+id/radio_level_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"/>
+            android:drawableBottom="@drawable/two_new"
+            android:layout_marginRight="20dp"/>
         <RadioButton android:id="@+id/radio_level_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"/>
+            android:drawableBottom="@drawable/three_new"
+            android:layout_marginRight="20dp"/>
     </RadioGroup>
 </LinearLayout>
