@@ -18,7 +18,7 @@ public class RegionScores {
     public static final String SCORES_NAME = "MyScoresFile";
     private Context mContext;
     private static final String TAG="RegionScores";
-    private int mPassMark = 4;
+    private int mPassMark = 6;
     private int mMeritMark = 10;
     private int mDistinctionMark = 12;
 

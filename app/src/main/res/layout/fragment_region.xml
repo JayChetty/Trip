@@ -13,17 +13,14 @@
 
         <RadioButton android:id="@+id/radio_level_1"
             android:layout_height="wrap_content"
-            android:paddingRight="18dp"
             android:layout_width="wrap_content"/>
 
         <RadioButton android:id="@+id/radio_level_2"
             android:layout_width="wrap_content"
-            android:paddingRight="18dp"
             android:layout_height="wrap_content"/>
 
         <RadioButton android:id="@+id/radio_level_3"
             android:layout_width="wrap_content"
-            android:paddingRight="18dp"
             android:layout_height="wrap_content"/>
     </RadioGroup>
 
@@ -36,39 +33,50 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="18dp"
+            android:paddingRight="9dp"
             android:id="@+id/one"
             android:src="@drawable/one_new"
             />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="18dp"
+            android:paddingRight="9dp"
             android:id="@+id/two"
             android:src="@drawable/two_new"
             />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="18dp"
+            android:paddingRight="5dp"
             android:id="@+id/three"
             android:src="@drawable/three_new"
         />
        </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/level_view"
+        android:textSize="20dp"
+        android:text="Level 1"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:textStyle="bold"
+        />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/best_score_header_view"
+            android:textSize="20dp"
             android:text="High Score: "
             />
 
@@ -78,6 +86,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/best_score_view"
             android:text="8"
+            android:textSize="20dp"
+            android:textColor="@android:color/holo_blue_dark"
             />
 
     </LinearLayout>

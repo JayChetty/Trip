@@ -36,7 +36,7 @@ public class RegionFragment extends Fragment {
     public static final String TRIP_DURATION = "com.jaypaulchetty.region.trip_duration";
     private static final String TAG = "RegionFragment";
     private String mRegion;
-    private TextView mRegionView,mBestScoreView, mTargetScoreView, mTargetStarView, mTimeTextView;
+    private TextView mRegionView,mBestScoreView, mTargetScoreView, mTargetStarView, mTimeTextView, mLevelView;
     private static final int REQUEST_PASSED = 1;
     private RegionScores mRegionScores;
     private int mTripLength = 1;
@@ -93,6 +93,7 @@ public class RegionFragment extends Fragment {
         mTargetScoreView = (TextView) v.findViewById(R.id.target_score_text_view);
         mTargetStarView = (TextView) v.findViewById(R.id.star_score_text_view);
         mTimeTextView = (TextView) v.findViewById(R.id.time_text_view);
+        mLevelView = (TextView) v.findViewById(R.id.level_view);
 
         displayBestScore();
 
@@ -124,6 +125,7 @@ public class RegionFragment extends Fragment {
                         mTripLength = 3;
                         break;
                 }
+                mLevelView.setText("Level " + mTripLength);
                 setDuration();
                 displayBestScore();
             }
@@ -230,7 +232,7 @@ public class RegionFragment extends Fragment {
             out = Long.toString(bestScore);
         }
         else{
-            out = "Not Completed Yet";
+            out = "0";
         }
         mBestScoreView.setText(out);
     }
