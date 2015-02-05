@@ -49,24 +49,9 @@ public class TripFragment extends Fragment {
 
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         mTripLength = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_LENGTH, 1);
-
+        mDuration = getActivity().getIntent().getLongExtra(RegionFragment.TRIP_DURATION, 1);
         Log.d(TAG, "fragment starting with region " +  mRegion);
         setTrip();
-
-        Log.d(TAG, "the length is" + mTripLength);
-
-        switch(mTripLength) {
-            case 3:
-                mDuration = 60000;
-                break;
-            case 4:
-                mDuration = 120000;
-                break;
-            case 5:
-                mDuration = 180000;
-                break;
-        }
-
     }
 
     public void onPause(){

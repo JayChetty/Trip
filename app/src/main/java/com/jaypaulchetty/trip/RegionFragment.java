@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -32,13 +33,16 @@ import java.util.concurrent.TimeUnit;
 public class RegionFragment extends Fragment {
     public static final String REGION_BEST_TIME = "com.jaypaulchetty.region.region_best_time";
     public static final String TRIP_LENGTH = "com.jaypaulchetty.region.trip_length";
+    public static final String TRIP_DURATION = "com.jaypaulchetty.region.trip_duration";
     private static final String TAG = "RegionFragment";
     private String mRegion;
-    private TextView mRegionView,mBestScoreView, mTargetScoreView;
+    private TextView mRegionView,mBestScoreView, mTargetScoreView, mTargetStarView, mTimeTextView;
     private static final int REQUEST_PASSED = 1;
     private RegionScores mRegionScores;
     private int mTripLength = 1;
     private RadioButton mLevel1Button,mLevel2Button,mLevel3Button;
+    private ImageView mImageOne, mImageTwo, mImageThree;
+    private long mDuration = 60000;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -68,6 +72,7 @@ public class RegionFragment extends Fragment {
                 Intent iTrip = new Intent(getActivity(), TripActivity.class);
                 iTrip.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
                 iTrip.putExtra(RegionFragment.TRIP_LENGTH, (mTripLength+2));
+                iTrip.putExtra(RegionFragment.TRIP_DURATION, (mDuration));
                 Log.d(TAG, "Length is" + mTripLength);
                 startActivityForResult(iTrip, REQUEST_PASSED);
                 Log.d(TAG, "Starting Trip");
@@ -85,10 +90,15 @@ public class RegionFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_region, container, false);
 
         mBestScoreView = (TextView) v.findViewById(R.id.best_score_view);
+        mTargetScoreView = (TextView) v.findViewById(R.id.target_score_text_view);
+        mTargetStarView = (TextView) v.findViewById(R.id.star_score_text_view);
+        mTimeTextView = (TextView) v.findViewById(R.id.time_text_view);
+
         displayBestScore();
 
-        mTargetScoreView = (TextView) v.findViewById(R.id.target_score_view);
-        mTargetScoreView.setText("Target: " + mRegionScores.getPassMark() + "   Merit: " +  mRegionScores.getMeritMark() + "   Distinction: " +mRegionScores.getDistinctionMark());
+        mTargetScoreView.setText(Integer.toString(mRegionScores.getPassMark()));
+        mTargetStarView.setText(Integer.toString(mRegionScores.getMeritMark()));
+
 
 
         mLevel1Button = (RadioButton) v.findViewById(R.id.radio_level_1);
@@ -114,16 +124,76 @@ public class RegionFragment extends Fragment {
                         mTripLength = 3;
                         break;
                 }
+                setDuration();
                 displayBestScore();
             }
         });
 
+        mImageOne = (ImageView) v.findViewById(R.id.one);
+        mImageTwo = (ImageView) v.findViewById(R.id.two);
+        mImageThree = (ImageView) v.findViewById(R.id.three);
+
+        drawImages();
         disableLevels(true);
+        setDuration();
 
 
 
         return v;
     }
+
+    private void setDuration(){
+        switch(mTripLength) {
+            case 1:
+                mDuration = 60000;
+                break;
+            case 2:
+                mDuration = 120000;
+                break;
+            case 3:
+                mDuration = 180000;
+                break;
+        }
+        mTimeTextView.setText(Long.toString(mDuration/1000));
+    }
+
+    private void drawImages(){
+        if(mRegionScores.getGrade(mRegion,1)==0) {
+            mImageOne.setImageResource(R.drawable.one_new);
+        } else if(mRegionScores.getGrade(mRegion,1)==1){
+            mImageOne.setImageResource(R.drawable.one_completed);
+        } else {
+            mImageOne.setImageResource(R.drawable.one_bossed);
+        }
+
+        if(mRegionScores.getGrade(mRegion,2)==0) {
+            if(mRegionScores.getGrade(mRegion,1)>0) {
+                mImageTwo.setImageResource(R.drawable.two_new);
+            }
+            else{
+                mImageTwo.setImageResource(R.drawable.two_restricted);
+            }
+        } else if(mRegionScores.getGrade(mRegion,2)==1){
+            mImageTwo.setImageResource(R.drawable.two_completed);
+        } else {
+            mImageTwo.setImageResource(R.drawable.two_bossed);
+        }
+
+        if(mRegionScores.getGrade(mRegion,3)==0) {
+            if(mRegionScores.getGrade(mRegion,2)> 0) {
+                mImageThree.setImageResource(R.drawable.three_new);
+            }
+            else{
+                mImageThree.setImageResource(R.drawable.three_restricted);
+            }
+        } else if(mRegionScores.getGrade(mRegion,3)==1){
+            mImageThree.setImageResource(R.drawable.three_completed);
+        } else {
+            mImageThree.setImageResource(R.drawable.three_bossed);
+        }
+    }
+
+
 
     private void disableLevels(boolean goToHighest){
         mLevel1Button.setEnabled(true);
@@ -154,11 +224,10 @@ public class RegionFragment extends Fragment {
 
     private void displayBestScore(){
         long bestScore = (long) mRegionScores.getScore(mRegion, mTripLength);
-        Log.d(TAG, "displaing best scre" + bestScore);
         mBestScoreView.setText("");
         String out = "";
         if (bestScore > 0) {
-            out = "Best Score: " + bestScore;
+            out = Long.toString(bestScore);
         }
         else{
             out = "Not Completed Yet";

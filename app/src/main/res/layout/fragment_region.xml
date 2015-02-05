@@ -3,38 +3,160 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/best_score_view"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/target_score_view"
-        />
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
+
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tableLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            >
+            >
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/radio_level_group"
+                    android:layout_gravity="center">
+                    <RadioButton android:id="@+id/radio_level_1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_marginRight="20dp"/>
+
+                    <RadioButton android:id="@+id/radio_level_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"/>
+
+                    <RadioButton android:id="@+id/radio_level_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"/>
+                </RadioGroup>
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+                <ImageView
+                    android:paddingRight="18dp"
+                    android:id="@+id/one"
+                    android:src="@drawable/one_new"
+                    />
+                <ImageView
+                    android:paddingRight="18dp"
+                    android:id="@+id/two"
+                    android:src="@drawable/two_new"
+                    />
+                <ImageView
+                    android:paddingRight="18dp"
+                    android:id="@+id/three"
+                    android:src="@drawable/three_new"
+                />
+            </TableRow>
+        </TableLayout>
+
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/radio_level_group"
-        android:gravity="center">
-        <RadioButton android:id="@+id/radio_level_1"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:drawableBottom="@drawable/one_new"
-            android:layout_marginRight="20dp"
-            android:gravity="center"/>
-        <RadioButton android:id="@+id/radio_level_2"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        >
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableBottom="@drawable/two_new"
-            android:layout_marginRight="20dp"/>
-        <RadioButton android:id="@+id/radio_level_3"
+            android:id="@+id/best_score_header_view"
+            android:text="High Score: "
+            />
+
+        <TextView
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableBottom="@drawable/three_new"
-            android:layout_marginRight="20dp"/>
-    </RadioGroup>
+            android:id="@+id/best_score_view"
+            android:text="8"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/target_score_image_view"
+            android:src="@drawable/ic_action_accept"
+            />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/target_score_text_view"
+            android:text="8"
+            />
+
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/star_score_image_view"
+            android:src="@drawable/ic_action_important"
+            />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/star_score_text_view"
+            android:text="10"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_image_view"
+            android:src="@drawable/ic_action_time"
+            />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_text_view"
+            android:text="60"
+            />
+
+    </LinearLayout>
+
+
 </LinearLayout>
