@@ -4,65 +4,57 @@
     android:orientation="vertical"
     >
 
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/radio_level_group"
+        android:layout_gravity="center">
 
+        <RadioButton android:id="@+id/radio_level_1"
+            android:layout_height="wrap_content"
+            android:paddingRight="18dp"
+            android:layout_width="wrap_content"/>
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tableLayout1"
+        <RadioButton android:id="@+id/radio_level_2"
+            android:layout_width="wrap_content"
+            android:paddingRight="18dp"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton android:id="@+id/radio_level_3"
+            android:layout_width="wrap_content"
+            android:paddingRight="18dp"
+            android:layout_height="wrap_content"/>
+    </RadioGroup>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:paddingTop="30dp"
-            >
-            >
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
-                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/radio_level_group"
-                    android:layout_gravity="center">
-                    <RadioButton android:id="@+id/radio_level_1"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_marginRight="20dp"/>
-
-                    <RadioButton android:id="@+id/radio_level_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"/>
-
-                    <RadioButton android:id="@+id/radio_level_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"/>
-                </RadioGroup>
-            </TableRow>
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-                <ImageView
-                    android:paddingRight="18dp"
-                    android:id="@+id/one"
-                    android:src="@drawable/one_new"
-                    />
-                <ImageView
-                    android:paddingRight="18dp"
-                    android:id="@+id/two"
-                    android:src="@drawable/two_new"
-                    />
-                <ImageView
-                    android:paddingRight="18dp"
-                    android:id="@+id/three"
-                    android:src="@drawable/three_new"
-                />
-            </TableRow>
-        </TableLayout>
-
-
+            android:paddingRight="18dp"
+            android:id="@+id/one"
+            android:src="@drawable/one_new"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="18dp"
+            android:id="@+id/two"
+            android:src="@drawable/two_new"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="18dp"
+            android:id="@+id/three"
+            android:src="@drawable/three_new"
+        />
+       </LinearLayout>
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
