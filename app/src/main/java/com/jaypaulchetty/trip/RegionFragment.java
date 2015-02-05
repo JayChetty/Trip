@@ -156,7 +156,7 @@ public class RegionFragment extends Fragment {
                 mDuration = 180000;
                 break;
         }
-        mTimeTextView.setText(Long.toString(mDuration/1000));
+        mTimeTextView.setText(Long.toString(mDuration/1000) + "s" );
     }
 
     private void drawImages(){
