@@ -31,15 +31,13 @@ public class TripFragment extends Fragment {
     private TripArrayAdapter mAdapter;
     private static final String TAG ="ListFragment";
     private String mRegion;
-    private int mTripNum = 1;
-    private int mNumTrips = 10;
+
     private int mNumCompleted = 0;
-    private long mStartTime = 0;
-    private long mEndTime = 0;
-    private static final int sMistakesAllowed = 3;
     private int mTripLength = 3;
+    private int mTargetScore = 0;
+    private int mStarScore = 0;
     private long mDuration = 60000;
-    TextView mTimeView, mCountView;
+    TextView mTimeView, mCountView,mTargetScoreView, mTargetStarView;
     CountDownTimer mTimer;
     ListView mList;
 
@@ -50,6 +48,8 @@ public class TripFragment extends Fragment {
         mRegion = getActivity().getIntent().getStringExtra(RegionChooserFragment.REGION_FOR_TRIPS);
         mTripLength = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_LENGTH, 1);
         mDuration = getActivity().getIntent().getLongExtra(RegionFragment.TRIP_DURATION, 1);
+        mTargetScore = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_TARGET, 1);
+        mStarScore = getActivity().getIntent().getIntExtra(RegionFragment.TRIP_STAR, 1);
         Log.d(TAG, "fragment starting with region " +  mRegion);
         setTrip();
     }
@@ -66,15 +66,21 @@ public class TripFragment extends Fragment {
         mList = (ListView) v.findViewById(R.id.trip_list);
         mList.setAdapter(mAdapter);
         mCountView = (TextView) v.findViewById(R.id.count_view);
-        mCountView.setText("Completed:" + mNumCompleted);
+        mTargetScoreView = (TextView) v.findViewById(R.id.target_score_view);
+        mTargetStarView = (TextView) v.findViewById(R.id.star_score_view);
         mTimeView = (TextView) v.findViewById(R.id.time_view);
+
+        mCountView.setText(Integer.toString(mNumCompleted));
+
+        mTargetScoreView.setText(Integer.toString(mTargetScore));
+        mTargetStarView.setText(Integer.toString(mStarScore));
 
 
         mTimer = new CountDownTimer(mDuration, 1000) {
 
             public void onTick(long millisUntilFinished) {
 
-                mTimeView.setText("seconds remaining: " + millisUntilFinished / 1000);
+                mTimeView.setText(Long.toString(millisUntilFinished / 1000) + "s");
             }
 
             public void onFinish() {
@@ -102,7 +108,6 @@ public class TripFragment extends Fragment {
         mAdapter.clear();
         mAdapter.addAll(mTrip.getRoute(0));
         mAdapter.notifyDataSetChanged();
-        mTripNum++;
     }
 
     private Boolean answerPasses(ArrayList<String> answers){
@@ -145,7 +150,7 @@ public class TripFragment extends Fragment {
 
             if(answerPasses(answers)){
                 mNumCompleted++;
-                mCountView.setText("Completed:" + mNumCompleted);
+                mCountView.setText(Integer.toString(mNumCompleted));
 //                            Toast toast = Toast.makeText(this.getActivity(), "Correct!", Toast.LENGTH_LONG);
 //                            toast.show();
                 createNewTrip();

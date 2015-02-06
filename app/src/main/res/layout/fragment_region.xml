@@ -102,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/target_score_image_view"
-            android:src="@drawable/ic_action_accept"
+            android:src="@drawable/ic_action_location_found"
             />
 
         <TextView

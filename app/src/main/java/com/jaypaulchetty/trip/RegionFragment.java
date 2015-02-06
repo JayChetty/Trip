@@ -34,6 +34,8 @@ public class RegionFragment extends Fragment {
     public static final String REGION_BEST_TIME = "com.jaypaulchetty.region.region_best_time";
     public static final String TRIP_LENGTH = "com.jaypaulchetty.region.trip_length";
     public static final String TRIP_DURATION = "com.jaypaulchetty.region.trip_duration";
+    public static final String TRIP_TARGET= "com.jaypaulchetty.region.trip_target";
+    public static final String TRIP_STAR = "com.jaypaulchetty.region.trip_star";
     private static final String TAG = "RegionFragment";
     private String mRegion;
     private TextView mRegionView,mBestScoreView, mTargetScoreView, mTargetStarView, mTimeTextView, mLevelView;
@@ -73,6 +75,8 @@ public class RegionFragment extends Fragment {
                 iTrip.putExtra(RegionChooserFragment.REGION_FOR_TRIPS, mRegion);
                 iTrip.putExtra(RegionFragment.TRIP_LENGTH, (mTripLength+2));
                 iTrip.putExtra(RegionFragment.TRIP_DURATION, (mDuration));
+                iTrip.putExtra(RegionFragment.TRIP_TARGET, (mRegionScores.getPassMark()));
+                iTrip.putExtra(RegionFragment.TRIP_STAR, (mRegionScores.getMeritMark()));
                 Log.d(TAG, "Length is" + mTripLength);
                 startActivityForResult(iTrip, REQUEST_PASSED);
                 Log.d(TAG, "Starting Trip");
